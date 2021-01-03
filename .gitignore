@@ -2,8 +2,6 @@ node_modules
 content/panorama/layout
 content/panorama/scripts
 game/*
-!scripts
-!addoninfo.txt
 publish
 ~$*.xlsx
 panorama_debugger.cfg
@@ -21,3 +19,6 @@ panorama_debugger.cfg
 *.vsndevts_c
 *.vsnd_c
 *.lua
+
+!game/scripts
+!addoninfo.txt

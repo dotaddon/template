@@ -51,7 +51,7 @@ npm run dev
 # 将会自动生成 publish 文件夹
 # 并自动 link 到 dota_addons/<addon_name>_publish 文件夹 之后
 # 你可以选择这个文件夹发布
-npm run prod
+npm run pro
 ```
 ### 使用步骤
 
