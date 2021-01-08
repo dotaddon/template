@@ -11,11 +11,23 @@ const path_form = 'excels/npc';         // 需要读取的excel路径
 const path_goto = 'game/scripts/npc';   // 导出的KV路径
 const excel_keyname = 1;                // 第二行存键名
 
-function row_data_to_dict(dct, key_names, row_data, i, parent_name) {
+const clean_data = (da) => {
+    if (!isNaN(da)) {
+        let number = parseFloat(da);
+        if (number % 1 != 0)
+            da = number.toFixed(4);
+    }
+    return da.toString();
+};
+
+const IsNull = (p)=>p == null|| (p == '' && typeof(p)!='number' );//|| p == ''
+
+function row_data_to_dict( key_names, row_data, i, parent_name) {
+    let dct = {};
     if (parent_name == null) parent_name = '';
     while (i < row_data.length && i < key_names.length) {
         key_name = key_names[i];
-        if (key_name == null) {
+        if (IsNull(key_name )) {
             i++;
             continue;
         }
@@ -23,26 +35,22 @@ function row_data_to_dict(dct, key_names, row_data, i, parent_name) {
         if (key_name.indexOf('[{]') >= 0) {
             i++;
             let pn = key_name.replace('[{]', '');
-            let ret_val = row_data_to_dict({}, key_names, row_data, i, pn);
+            let ret_val = row_data_to_dict( key_names, row_data, i, pn);
             dct[pn] = ret_val.dct;
             i = ret_val.i + 1;
         } else if (key_name.indexOf('[}]') >= 0) {
             return { dct: dct, i: i };
-        } else if (key_name != null && key_name != '') {
+        } else {
             data = row_data[i];
-
-            const clean_data = (da) => {
-                if (!isNaN(data)) {
-                    let number = parseFloat(da);
-                    if (number % 1 != 0) da = number.toFixed(4);
-                }
-                return da.toString();
-            };
+            if (IsNull(data )) {
+                i++;
+                continue;
+            }
 
             // 处理AttachWearables
-            if (parent_name == 'AttachWearables' && data != '' && data != null) {
+            if (parent_name == 'AttachWearables') {
                 dct[key_name] = { ItemDef: clean_data(data) };
-            } else if (parent_name == 'AbilitySpecial' && data != '' && data != null) {
+            } else if (parent_name == 'AbilitySpecial') {
                 // 写入ability specials
                 let datas = data.toString().split(' ');
                 let has_float = false;
@@ -54,13 +62,14 @@ function row_data_to_dict(dct, key_names, row_data, i, parent_name) {
                 data = clean_data(data)
                     .replace(special_key_name + ' ', '')
                     .replace(special_key_name, '');
-                dct[key_name] = { var_type: has_float ? 'FIELID_FLOAT' : 'FIELD_INTEGER', [special_key_name != null ? special_key_name : 'var_' + key_name]: data };
-            } else if (data != null && data != '') {
+                dct[key_name] = { var_type: `FIELID_${has_float ? 'FLOAT' : 'INTEGER'}`, [ !IsNull(special_key_name) ? special_key_name : `var_${key_name}`]: data };
+            } else {
                 dct[key_name] = clean_data(data);
-            } else if (key_name.indexOf('Ability') >= 0) {
-                // 这里要注意，只要定义了技能的key，哪怕没有数据，也要填一个"”，否则不能正确覆盖为空技能
-                dct[key_name] = '';
-            }
+            } 
+            // else if (key_name.indexOf('Ability') >= 0) {
+            //     // 这里要注意，只要定义了技能的key，哪怕没有数据，也要填一个"”，否则不能正确覆盖为空技能
+            //     dct[key_name] = '';
+            // }
             i++;
         }
     }
@@ -71,7 +80,7 @@ function single_excel_to_kv(rowval) {
     let key_row = rowval[excel_keyname];
     let key_in_column = (key_row[0] == 'vertical_keys')?
         (val)=>val[1].toString():
-        (val,key)=>row_data_to_dict({}, key, val, 1).dct;
+        (val,key)=>row_data_to_dict( key, val, 1).dct;
 
     let kv_data = {};
     for (i = excel_keyname+1; i < rowval.length; ++i) {
