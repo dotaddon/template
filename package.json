@@ -1,7 +1,7 @@
 {
     "name": "tsdotarpg",
     "mainmap": "",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "a ts template for dota2 rpg, together with some helper scripts",
     "license": "MIT",
     "repository": "https://gitee.com/takegine/ts-dota-rpg",
