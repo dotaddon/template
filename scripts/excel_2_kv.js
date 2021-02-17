@@ -95,7 +95,8 @@ function single_excel_to_kv(rowval) {
 
 function single_excel_filter(file) {
     console.log(`excel 2 kv 编译器:`);
-    if ( file.indexOf('.xls') ==0 || file.indexOf('~$') >= 0 )
+    if ( file.indexOf('.xls') <0
+     || file.indexOf('~$') >= 0 )
         return console.log(`忽略非Excel文件=> ${file}`);
 
     let sheets = xlsx.parse(file);
@@ -109,7 +110,10 @@ function single_excel_filter(file) {
     if (datasum <= 0)
         return console.log(`忽略异常文件=>${file}\n  实际数据长度只有${datasum}`);
 
-    let outpath = file.replace(path_form, path_goto).replace('.xlsx', '.txt');
+    let outpath = file
+        .replace('\\', '/')
+        .replace(path_form, path_goto)
+        .replace('.xlsx', '.txt');
     let parenti = outpath.lastIndexOf('/');
     let out_dir = outpath.substr(0, parenti);
     if (!fs.existsSync(out_dir)) fs.mkdirSync(out_dir);
