@@ -62,7 +62,7 @@ function row_data_to_dict( key_names, row_data, i, parent_name) {
                 data = clean_data(data)
                     .replace(special_key_name + ' ', '')
                     .replace(special_key_name, '');
-                dct[key_name] = { var_type: `FIELID_${has_float ? 'FLOAT' : 'INTEGER'}`, [ !IsNull(special_key_name) ? special_key_name : `var_${key_name}`]: data };
+                dct[key_name] = { var_type: `FIELD_${has_float ? 'FLOAT' : 'INTEGER'}`, [ !IsNull(special_key_name) ? special_key_name : `var_${key_name}`]: data };
             } else {
                 dct[key_name] = clean_data(data);
             } 
