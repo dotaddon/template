@@ -18,6 +18,7 @@
     ],
     "scripts": {
         "launch": "node scripts/launch.js",
+        "build": "node scripts/build.js",
         "dev": "run-p dev:*",
         "pro": "run-s pro:*",
         "predev": "node scripts/install.js",
