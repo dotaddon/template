@@ -8,6 +8,8 @@
     <styles>
         <include src="s2r://panorama/styles/dotastyles.vcss_c" />
         <include src="./styles.scss" />
+        <!-- 这个是写入样式，用于自动编译前端添加的图片,没有其他功效 -->
+        <include src="file://{resources}/styles/async_customdata.css" />
     </styles>
     <Panel class="root" hittest="false" />
 </root>

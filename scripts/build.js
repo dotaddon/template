@@ -85,6 +85,24 @@ await Promise.all(
         index++;
     }
 
+    const imagePath = path.join( sourcePath ,'panorama', 'images');
+    if (!fs.existsSync(imagePath)) return;
+
+    const images = read_all_files(imagePath);
+    let styles = '#this_just_for_load_img_not_useful {\n';
+    images.forEach(dir => {
+        let parenti = dir.lastIndexOf('images');
+        let out_dir = dir.substr( parenti+7, dir.length);
+        styles += ` background-image:url("file://{images}/${out_dir}");\n`
+    });
+    styles += '}';
+
+    const outpath = path.join( sourcePath ,'panorama', 'styles', 'async_customdata.css')
+    let parenti = outpath.lastIndexOf('\\');
+    let out_dir = outpath.substr(0, parenti);
+    if (!fs.existsSync(out_dir)) fs.mkdirSync(out_dir);
+    
+    fs.writeFileSync(outpath, styles);
 })().catch((error) => {
     console.error(error);
     process.exit(1);

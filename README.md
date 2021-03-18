@@ -21,6 +21,7 @@
 3. 将`excels/npc`文件夹的`.xlsx`文件同步到`game/scripts/npc`，编译为dota2的kv文件
 4. 将`excels/localization`文件夹的`.xlsx`文件同步到`game/resources`，编译为dota2的语言文件
 5. 将`game/scripts/npc`文件夹的内容同步到`content/panorama/scripts/keyvalues.js`
+6. 批量编译地图、特效、全景图片资源
 
 ## 支持的指令
 ```bash
@@ -38,6 +39,11 @@ npm run dev
 # 并自动 link 到 dota_addons/<addon_name>_publish 文件夹 之后
 # 你可以选择这个文件夹发布
 npm run pro
+
+# 执行 编译 操作
+# 自动编译content 目录下的所有资源到 game目录下
+# 自动把images目录下的所有图片写入样式，需要启动一次游戏实现编译
+npm run build
 ```
 
 ## 文件夹内容
