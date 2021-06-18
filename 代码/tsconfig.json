@@ -1,5 +1,5 @@
 {
-    "include": ["declaration", "../CommunicationDeclaration", "vscripts" ],
+    "include": ["declaration", "../通讯声明", "vscripts" ],
     "compilerOptions": {
         "rootDir": "vscripts",
         "target": "esnext",
