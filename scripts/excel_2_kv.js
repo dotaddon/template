@@ -4,14 +4,18 @@ const xlsx = require('node-xlsx');
 const jskv = require('dota-js-kv');
 const program = require('commander');
 const chokidar = require('chokidar');
-const { read_all_files, read_sub_directories } = require('./utils');
+const { read_all_files, ProgressBar, kvImport } = require('./utils');
 
+const pb = new ProgressBar('excel 2 kv 编译器',5);
+const path_excel ={
+    npc:'代码/npc',
+    localization:'资源',
+}
+const excel_keyname = 1; // 第二行存键名
+let locali_data = {};
+let declaration = {};
 
-const path_form = 'excels/npc';         // 需要读取的excel路径
-const path_goto = 'game/scripts/npc';   // 导出的KV路径
-const excel_keyname = 1;                // 第二行存键名
-
-const clean_data = (da) => {
+const clean_data = da => {
     if (!isNaN(da)) {
         let number = parseFloat(da);
         if (number % 1 != 0)
@@ -20,7 +24,17 @@ const clean_data = (da) => {
     return da.toString();
 };
 
-const IsNull = (p)=>p == null|| (p == '' && typeof(p)!='number' );//|| p == ''
+const IsNull = p=> p == null|| (p == '' && typeof(p)!='number' );//|| p == ''
+
+const depth  = n=> {
+    let str = '';
+    let index = 0
+    do {
+        str += '  ';
+        index++;
+    } while (index<=n);
+    return str;
+}
 
 function row_data_to_dict( key_names, row_data, i, parent_name) {
     let dct = {};
@@ -76,13 +90,13 @@ function row_data_to_dict( key_names, row_data, i, parent_name) {
     return { dct: dct, i: i };
 }
 
-function single_excel_to_kv(rowval) {
+function single_excel_to_npc(rowval) {
     let key_row = rowval[excel_keyname];
     let key_in_column = (key_row[0] == 'vertical_keys')?
         (val)=>val[1].toString():
-        (val,key)=>row_data_to_dict( key, val, 1).dct;
+        (val,key)=>row_data_to_dict( key, val, 0).dct;
 
-    let kv_data = {};
+        let kv_data = {};
     for (i = excel_keyname+1; i < rowval.length; ++i) {
         let row_data = rowval[i];
         let main_key = row_data[0];
@@ -93,49 +107,147 @@ function single_excel_to_kv(rowval) {
     return kv_data;
 }
 
-function single_excel_filter(file) {
-    console.log(`excel 2 kv 编译器:`);
-    if ( file.indexOf('.xls') <0
+function single_excel_to_localze(rowval) {
+    let key_row = rowval[excel_keyname];
+    let key_in_column = (val)=>val.toString();
+    let kv_data = {};
+
+    for (j = 1; j < key_row.length; ++j) {
+        let language = key_row[j]
+        kv_data[language]={}
+        for (i = excel_keyname+1; i < rowval.length; ++i) {
+            let row_data = rowval[i];
+            let main_key = row_data[0];
+            if (main_key == null) continue;
+            let ret_val = row_data[j];
+            if (ret_val == null) continue;
+            kv_data[language][main_key] = key_in_column(ret_val);
+        }
+    }
+    return kv_data;
+}
+
+const save_lang_kv = async (path) => {
+    let index = 0
+    for (const language in locali_data) {
+        let file_name = `/addon_${language.toLowerCase()}.txt`;
+        fs.writeFileSync(path+file_name, `"${kvImport}" ${jskv.encode(locali_data[language])}`);
+        pb.render({ 
+            completed: index++,
+            total: 1+index,
+            msg:`写入语言文件完成 => ${file_name}`
+        })
+    }
+}
+
+const save_npc_declaration = async (file_name, keys) => {
+    if( declaration[file_name] == keys)
+        return;
+
+    declaration[file_name.replace('npc\\','')] = keys;
+    const path_into = '交互/declaration/async_customdata.d.ts';
+    let str = 'declare interface CustomUIConfig {\n';
+    let dp = 0;
+    for(const name in declaration){
+        str += `${depth(dp)}${name}:{\n`;
+        dp ++;
+        str += `${depth(dp)}[id:string]:{\n`;
+        dp ++;
+        declaration[name].forEach(
+            ele => {
+                ele = ele.toString();
+                if(ele.indexOf('[{]') >= 0){
+                    str += `${depth(dp)}${ele.replace('[{]','')}:{\n`;
+                    dp++;
+                }else if(ele.indexOf('[}]') >= 0){
+                    dp--;
+                    str += `${depth(dp)}},\n`;
+                }else{
+                    str += `${depth(dp)}${ele}:string,\n`
+                }
+            }
+        )
+        dp --;
+        str += `${depth(dp)}},\n`;
+        dp --;
+        str += `${depth(dp)}},\n`;
+    }
+    str +='}';
+    fs.writeFileSync(path_into, str);
+}
+
+function single_excel_filter(file, bNpc, path_from, path_goto) {
+    let extName = path.extname(file)
+    if ( ( extName!= '.xlsx' && extName != '.xls')
      || file.indexOf('~$') >= 0 )
-        return console.log(`忽略非Excel文件=> ${file}`);
+        return `忽略非Excel文件=> ${file}`;
 
     let sheets = xlsx.parse(file);
     let sheet  = sheets[0];
     let rowval = sheet.data;
     if (rowval.length < excel_keyname+2)
-        return console.log(`忽略空白文件=>${file}\n  至少需要${excel_keyname+2}行（注释，关键数据）`);
+        return `忽略空白文件=>${file}\n  至少需要${excel_keyname+2}行（注释，关键数据）`;
 
-    let kv_data = single_excel_to_kv(rowval);
+    let kv_data = bNpc ? single_excel_to_npc(rowval) : single_excel_to_localze(rowval);
     let datasum = Object.keys(kv_data).length;
     if (datasum <= 0)
-        return console.log(`忽略异常文件=>${file}\n  实际数据长度只有${datasum}`);
+        return `忽略异常文件=>${file}\n  实际数据长度只有${datasum}`;
 
-    let outpath = file
-        .replace('\\', '/')
-        .replace(path_form, path_goto)
-        .replace('.xlsx', '.txt');
-    let parenti = outpath.lastIndexOf('/');
-    let out_dir = outpath.substr(0, parenti);
-    if (!fs.existsSync(out_dir)) fs.mkdirSync(out_dir);
-    fs.writeFileSync(outpath, jskv.encode({addon_title:kv_data}).replace("addon_title","西索酱's excels tool"));
-        return console.log(`${path.extname(file)}->kv成功=> ${outpath} , \n项目总数 ->${datasum}`);
+    if(bNpc){
+        let outpath = file
+            .replace('\\', '/')
+            .replace(path_from, path_goto)
+            .replace('.xlsx', '.txt');
+        let parenti = outpath.lastIndexOf('/');
+        let out_dir = outpath.substr(0, parenti);
+
+        let file_name = outpath.substr(parenti+1, outpath.length).replace('.txt', '');
+        save_npc_declaration(file_name, rowval[1]);
+
+        if (!fs.existsSync(out_dir)) fs.mkdirSync(out_dir);
+        fs.writeFileSync(outpath, `"${kvImport}" ${jskv.encode(kv_data)}`);
+            // return `${extName}->kv成功=> ${outpath} , \n项目总数 ->${datasum}`;
+
+    } else {
+        for(const i in kv_data){
+            if(!locali_data[i]){
+                locali_data[i]={ Language: i, Tokens:{} }
+            }
+            for (const j in kv_data[i]) {
+                locali_data[i].Tokens[j] = kv_data[i][j];
+            }
+        }
+    }
 }
 
-const all_excel_to_kv = async (path) => {
-    const files = read_all_files(path_form);
-    files.forEach((file) => {
-        single_excel_filter(file);
-    });
-};
-
 (async () => {
-    all_excel_to_kv();
+    
+    for(const path_root in path_excel){
+        const path_from = `表格/${path_root}`;
+        const path_goto = path_excel[path_root];
+        const bNpc = path_root=='npc';
+        const fils = read_all_files(path_from)
+        fils.forEach(
+            (file,index) => pb.render({ 
+                completed: index,
+                total: fils.length-1,
+                err:single_excel_filter(file, bNpc, path_from, path_goto)
+            })
+        );
+    }
     program.option('-w, --watch', 'Watch Mode').parse(process.argv);
     if (program.watch) {
         console.log('进入后台同步');
-        chokidar.watch(path_form).on('change', (file) => {
-            single_excel_filter(file);
-        });
+        for(const path_root in path_excel){
+            const path_from = `表格/${path_root}`;
+            const path_goto = path_excel[path_root];
+            const bNpc = path_root=='npc';
+            chokidar.watch(path_from).on('change', (file) => {
+                console.log(single_excel_filter(file, bNpc, path_from, path_goto))
+                if(bNpc) return;
+                save_lang_kv(path_goto);
+            });
+        }
     }
 })().catch((error) => {
     console.error(error);

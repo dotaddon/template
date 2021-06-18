@@ -1,4 +1,5 @@
 {
+    "include": ["declaration", "../CommunicationDeclaration", "vscripts" ],
     "compilerOptions": {
         "rootDir": "vscripts",
         "target": "esnext",
@@ -13,7 +14,6 @@
         "suppressImplicitAnyIndexErrors":true,
         "strict": true
     },
-    "include": ["../../declaration", "vscripts"],
     "tstl": {
         "luaTarget": "JIT",
         "sourceMapTraceback": true

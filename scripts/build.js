@@ -9,8 +9,8 @@ const { getAddonName, getDotaPath, read_all_files, ProgressBar } = require('./ut
  */
 const buildFilter = (file)=>{
     return !fs.existsSync(file)
-    || file.indexOf('panorama/src')>0
-    || file.indexOf('config')>0
+     || file.indexOf('panorama/src')>0
+     || file.indexOf('config')>0
 }
 
 /* 这里是模拟 DB 的单条写入更新的异步任务 */

@@ -1,7 +1,9 @@
 const { findSteamAppByName, SteamNotFoundError } = require('find-steam-app');
 const packageJson = require('../package.json');
 const fs = require('fs-extra');
-const slog = require('single-line-log').stdout;//用以在同一行打印文本
+
+// 这里用到一个很实用的 npm 模块，用以在同一行打印文本
+const slog = require('single-line-log').stdout;
 
 module.exports.getAddonName = () => {
     if (!/^[a-z]([\d_a-z]+)?$/.test(packageJson.name)) {
@@ -30,67 +32,56 @@ module.exports.getMapName = () => {
     return packageJson.mainmap;
 };
 
-read_all_files = (path) => {
-    var pa = fs.readdirSync(path);
-    var files = [];
-    pa.forEach((ele, index) => {
+/** 读取全部文件 */
+read_all_files = path => {
+    var files  = [];
+    let active = (a)=>a.isDirectory()
+        ? (b,c)=>b.push.apply(b, read_all_files(c) )
+        : (b,c)=>b.push(c);
+    fs.readdirSync(path)
+      .forEach( ele => {
         let child = path + '/' + ele;
-        let info = fs.statSync(child);
-        if (info.isDirectory()) {
-            let subs = read_all_files(child);
-            subs.forEach((s) => files.push(s));
-        } else {
-            files.push(child);
-        }
+        active(fs.statSync(child))( files, child)
     });
     return files;
 };
 module.exports.read_all_files = read_all_files;
 
-read_sub_directories = (path) => {
-    var pa = fs.readdirSync(path);
-    var directories = [];
-    pa.forEach((ele, index) => {
-        let child = path + '/' + ele;
-        let info = fs.statSync(child);
-        if (info.isDirectory()) {
-            directories.push(child);
-        }
-    });
-    return directories;
-};
-module.exports.read_sub_directories = read_sub_directories;
+/** 读取文件目录 */
+module.exports.read_sub_directories = path => fs
+    .readdirSync(path)
+    .map(ele => `${path}/${ele}`)
+    .filter(ele => fs.statSync(ele).isDirectory());
 
-
-// 封装的 ProgressBar 工具
-function ProgressBar(description, bar_length){
+/** 封装的 ProgressBar 工具 */
+module.exports.ProgressBar = function (description, bar_length){
     // 两个基本参数(属性)
     this.description = description || 'Progress';    // 命令行开头的文字信息
     this.length = bar_length || 25;           // 进度条的长度(单位：字符)，默认设为 25
-
-    // 刷新进度条图案、文字的方法
-    this.render = function (opts){
+    this.error = ''
+    /**
+     * 刷新进度条图案、文字的方法
+     * @param {*} opts completed 已完成
+     * @param {*} opts total 总数
+     * @param {*} opts msg 单次提交信息
+     * @param {*} opts err 累计提交信息
+     */
+    this.render =opts=>{
     var percent = (opts.completed / opts.total).toFixed(4);  // 计算进度(子任务的 完成数 除以 总数)
     var cell_num = Math.floor(percent * this.length);       // 计算需要多少个 █ 符号来拼凑图案
 
     // 拼接黑色条
     var cell = '';
-    for (var i=0;i<cell_num;i++) {
-        cell += '█';
+    for (var i=0;i<this.length;i++) {
+        cell += i<cell_num ? '█' : '░';
     }
-
-    // 拼接灰色条
-    var empty = '';
-    for (var i=0;i<this.length-cell_num;i++) {
-        empty += '░';
-    }
-
+    this.error += opts.err? `\n${opts.err}`:'';
     // 拼接最终文本
-    var cmdText = this.description + ': ' + (100*percent).toFixed(2) + '% ' + cell + empty + ' ' + opts.completed + '/' + opts.total;
-
+    var cmdText = `${this.description}: ${(100*percent).toFixed(2)}% ${cell} ${opts.completed}/${opts.total}\n${opts.msg||''}\n${this.error}`;
     // 在单行输出文本
     slog(cmdText);
     };
-}
+};
 
-module.exports.ProgressBar = ProgressBar;
+
+module.exports.kvImport = "西索酱's excels tool";
