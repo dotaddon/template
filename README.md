@@ -1,7 +1,7 @@
 # <div align='center' ><font size='70'>TsDotaRPG</font></div>
 
 ## 梗概
-* dota2 自定义游戏开发模板
+* dota2 自定义游戏开发模板，全汉化目录结构
 * 贡献者：
   * Moddota
   * ark120202[已故]
@@ -18,8 +18,8 @@
 ## 功能概述
 1. 用`react`来写dota2全景,实时编译
 2. 用`TypeScript`写dota2自定义RPG脚本,实时编译
-3. 将`excels/npc`文件夹的`.xlsx`文件同步到`game/scripts/npc`，编译为dota2的kv文件
-4. 将`excels/localization`文件夹的`.xlsx`文件同步到`game/resources`，编译为dota2的语言文件
+3. 将`表格/npc`文件夹的`.xlsx`文件同步到`game/scripts/npc`，编译为dota2的kv文件
+4. 将`表格/localization`文件夹的`.xlsx`文件同步到`game/resources`，编译为dota2的语言文件
 5. 将`game/scripts/npc`文件夹的内容同步到`content/panorama/scripts/keyvalues.js`
 6. 批量编译地图、特效、全景图片资源
 
@@ -28,31 +28,36 @@
 # 启动 dota2
 # 如果提供了 <addon_name> 则会载入指定的 addon（默认该项目）
 # 如果提供了  <map_name>  则会自动载入对应的地图名
-npm run launch [--a <addon_name>] [--m <map_name>]
+yarn launch [--a <addon_name>] [--m <map_name>]
 
 # 进入 开发 模式
-# 监听且实时编译:ts 2 lua，KV 2 js，Excel 2 KV，Excel 2 localization
-npm run dev
+# 监听且实时编译:ts 2 lua，KV 2 js，Excel 2 KV，
+yarn dev
 
 # 执行 发布 操作
 # 将会自动生成 publish 文件夹
 # 并自动 link 到 dota_addons/<addon_name>_publish 文件夹 之后
 # 你可以选择这个文件夹发布
-npm run pro
+yarn pro
 
 # 执行 编译 操作
 # 自动编译content 目录下的所有资源到 game目录下
 # 自动把images目录下的所有图片写入样式，需要启动一次游戏实现编译
-npm run build
+yarn build
+
+# 执行 安装插件 操作
+# 如果您使用了vscode作为IDE，那么可以使用本条指令快速安装推荐插件
+# 插件不是使用本模版的必备条件，但可以方便码代码
+yarn code
 ```
 
 ## 文件夹内容
 | 文件夹名| 功用|
 |---|---|
 content | 同步更新 `/dota 2 beta/content/dota_addons/<addon_name>` 
-game | 同步更新 `/dota 2 beta/game/dota_addons/<addon_name>` 
+game    | 同步更新 `/dota 2 beta/game/dota_addons/<addon_name>` 
 declaration | 用来写`panorama ts`和`tstl`公用的声明，如`custom_net_tables`等
-excels | 用来写 KV 表和各种本地化文本
+excels  | 用来写 KV 表和各种本地化文本
 scripts | 各种 node 脚本，用来完成各种辅助功能
 node_modules?| 开发依赖
 publish? | 发布包，`/dota 2 beta/game/dota_addons/<addon_name>_publish` 
@@ -75,8 +80,8 @@ publish? | 发布包，`/dota 2 beta/game/dota_addons/<addon_name>_publish`
 1. 安装`node.js`，要求是 above Node v14.10.1 ~~因为低于这个版本的没有测试过~~
 2. `clone` 或 `fork` [本项目](https://gitee.com/takegine/ts-dota-rpg/members#)
 3. 打开`package.json`，将`name`修改为你自己喜欢的名字。全小写
-4. 执行`npm install`安装依赖，他应该会自动 link`content`,`game`文件夹到你的`dota 2 beta/dota_addons`,(如果碰到权限问题，请尝试重启)
-5. `npm run dev`，开始你的开发
+4. 执行`npm install`或者`yarn`安装依赖，他应该会自动链接对应的文件夹到你的`dota 2 beta/dota_addons`,(如果碰到权限问题，请尝试重启)
+5. `yarn dev`，开始你的开发
 
 ## 可拓展的功能
 4. 如果你需要加密，请自行修改`scripts/publish.js`

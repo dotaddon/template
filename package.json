@@ -1,7 +1,7 @@
 {
     "name": "tsdotarpg",
     "mainmap": "",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "description": "a ts template for dota2 rpg, together with some helper scripts",
     "license": "MIT",
     "repository": "https://gitee.com/takegine/ts-dota-rpg",
@@ -21,6 +21,7 @@
         "build": "node toolCode/build.js",
         "dev": "run-p dev:*",
         "pro": "run-s pro:*",
+        "code": "code --install-extension robincode.dota2-coding-helper --install-extension bigciba.dota2-tools",
         "predev": "node toolCode/install.js",
         "prepro": "node toolCode/prepublish.js",
         "pro:panorama": "node --preserve-symlinks node_modules/webpack/bin/webpack.js --config 交互/webpack.config.js",
@@ -61,8 +62,8 @@
         "single-line-log": "1.1.2"
     },
     "devDependencies": {
-        "@moddota/dota-lua-types": "^4.7.1",
-        "@moddota/panorama-types": "^1.6.1",
+        "@moddota/dota-lua-types": "^4.10.1",
+        "@moddota/panorama-types": "^1.9.0",
         "react-panorama": "^0.1.2",
         "webpack-panorama": "^0.2.0"
     },
