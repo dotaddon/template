@@ -42,7 +42,7 @@ function copyDir(src, dist, omit, bEncrypt, callback) {
                     if (stat.isDirectory()) return copyDir(_src, _dist, omit, bEncrypt, callback);
                     if (stat.isFile()) {
                         var bomit = !omit(_src);
-                        console.log( bomit ? 'check:':' omit:', _path);
+                        console.log( bomit ? 'check:':' omit:', _dist);
                         if (bomit) {
                             let content = fs.readFileSync(_src);
                             if (bEncrypt(_src)) content = encrypt_content(content);
