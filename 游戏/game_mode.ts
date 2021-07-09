@@ -23,6 +23,7 @@ export class GameMode {
         this.configure();
         ListenToGameEvent("game_rules_state_change", () => this.OnStateChange(), undefined);
         ListenToGameEvent("npc_spawned", event => this.OnNpcSpawned(event), undefined);
+        CustomGameEventManager.RegisterListener('c2s_test_event',(id,event)=>print('你点击了测试按钮'))
     }
 
     private configure(): void {
