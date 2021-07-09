@@ -5,9 +5,9 @@ const { PanoramaManifestPlugin, PanoramaTargetPlugin } = require('webpack-panora
 /** @type {import('webpack').Configuration} */
 module.exports = {
     mode: 'development',
-    context: path.resolve(__dirname, 'src'),
+    context: path.resolve(__dirname ),
     output: {
-        path: path.resolve(__dirname, 'layout/custom_game'),
+        path: path.resolve(__dirname, '编译/layout/custom_game'),
         publicPath: 'file://{resources}/layout/custom_game/',
     },
 

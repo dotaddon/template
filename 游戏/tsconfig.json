@@ -1,0 +1,22 @@
+{
+    "include": ["../游戏", "../共用声明" ],
+    "compilerOptions": {
+        // "rootDir": "../游戏",
+        "outDir": "编译",//输出目录
+        
+        "target": "esnext",
+        "lib": ["esnext"],
+        "types": ["@moddota/dota-lua-types"],
+        "moduleResolution": "node",
+        "experimentalDecorators": true,//启用实验性的ES装饰器。
+        "strictNullChecks": false,
+        "strictPropertyInitialization": false,
+        "suppressImplicitAnyIndexErrors":true,// 抑制任何索引错误
+        "removeComments": true,//编译 js 的时候，删除掉注释
+        "strict": true,
+    },
+    "tstl": {
+        "luaTarget": "JIT",
+        "sourceMapTraceback": true
+    }
+}

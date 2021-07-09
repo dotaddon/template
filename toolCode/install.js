@@ -8,12 +8,15 @@ const pb = new ProgressBar('文件链接到dota2目录',5);
 const linkPath = {
     game:{
         资源:'resource',
-        代码:'scripts',
-        'addoninfo.txt':'addoninfo.txt'
+        数据:'scripts/npc',
+        '游戏/编译':'scripts/vscripts',
+        '游戏/事件.kv':'scripts/custom.gameevents',
+        '游戏/网表.kv':'scripts/custom_net_tables.txt',
+        '游戏/项目.kv':'addoninfo.txt',
     },
     content:{
+        '交互/编译':'panorama',
         地图:'maps',
-        交互:'panorama',
         贴图:'materials',
         模型:'models',
         特效:'particles',
@@ -22,8 +25,13 @@ const linkPath = {
 
 function linkA2B(sourcePath,targetPath) {
     
-    fs.moveSync(sourcePath, targetPath);
-    fs.symlinkSync(targetPath, sourcePath, 'junction');
+    let info = fs.statSync(sourcePath);
+    if(info.isFile()){
+        fs.copyFileSync(sourcePath, targetPath)
+    }else{
+        fs.moveSync(sourcePath, targetPath);
+        fs.symlinkSync(targetPath, sourcePath, 'junction');
+    }
     return `已建立链接 ${sourcePath} <==> ${targetPath}`
 }
 async function connect(sourcePath, targetPath) {
@@ -32,9 +40,6 @@ async function connect(sourcePath, targetPath) {
 
     if (!fs.existsSync(targetPath)) 
         return linkA2B(sourcePath,targetPath)
-    
-    if (sourcePath.indexOf('txt')>0)
-        return fs.copySync(sourcePath,targetPath)
 
     const isCorrect = fs.lstatSync(sourcePath).isSymbolicLink() && fs.realpathSync(sourcePath) === targetPath;
     if (isCorrect)
@@ -63,9 +68,10 @@ async function connect(sourcePath, targetPath) {
         for(const curPath in linkList){
             const sourcePath = path.resolve(__dirname, '..', curPath);
             const targetPath = path.join(addonPath, linkList[curPath]);
+            
             pb.render({
                 completed: index++,
-                total: 8,
+                total: 11,
                 msg:await connect(sourcePath, targetPath)
             });
         }

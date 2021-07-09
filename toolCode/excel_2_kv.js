@@ -8,8 +8,8 @@ const { read_all_files, ProgressBar, kvImport } = require('./utils');
 
 const pb = new ProgressBar('excel 2 kv 编译器',5);
 const path_excel ={
-    npc:'代码/npc',
-    localization:'资源',
+    数据:'数据',
+    方言:'资源',
 }
 const excel_keyname = 1; // 第二行存键名
 let locali_data = {};

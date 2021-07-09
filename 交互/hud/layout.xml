@@ -3,13 +3,13 @@
         <include src="./script.tsx" />
         
         <!-- 这个是从客户端自动同步过来的KV，如果你不想要可以注释 -->
-        <include src="file://{resources}/scripts/async_customdata.js" />
+        <include src="file://{resources}/scripts/custom_game/async_customdata.js" />
     </scripts>
     <styles>
         <include src="s2r://panorama/styles/dotastyles.vcss_c" />
         <include src="./styles.scss" />
         <!-- 这个是写入样式，用于自动编译前端添加的图片,没有其他功效 -->
-        <include src="file://{resources}/styles/async_customdata.css" />
+        <include src="file://{resources}/styles/custom_game/async_customdata.css" />
     </styles>
     <Panel class="root" hittest="false" />
 </root>

@@ -3,11 +3,11 @@ const path = require('path');
 const jskv = require('dota-js-kv');
 const program = require('commander');
 const chokidar = require('chokidar');
-const { read_all_files, ProgressBar, kvImport } = require('./utils');
+const { read_all_files, ProgressBar, kvImport, truePath } = require('./utils');
 
 const pb = new ProgressBar('同步KV-JS文件',5);
-const path_from = '代码/npc';
-const path_goto = '交互/scripts/';
+const path_from = '数据';
+const path_goto = truePath(['交互', '编译', 'scripts', 'custom_game']);
 function kv_js_sync() {
     let files = read_all_files(path_from);
     let out_put = '';
@@ -34,10 +34,7 @@ function kv_js_sync() {
 (async () => {
     if (!fs.existsSync(path_from)) 
         return console.log(`${path_from} 目录不存在，请忽略kv同步！`);
-    if (!fs.existsSync(path_goto)) {
-        console.log(`不创建现有内容kv路径=> ${path_goto}`);
-        fs.mkdirSync(path_goto);
-    }
+
     kv_js_sync();
     program.option('-w, --watch', 'Watch Mode').parse(process.argv);
     if (program.watch) {

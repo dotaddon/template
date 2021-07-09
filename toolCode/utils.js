@@ -48,10 +48,17 @@ read_all_files = path => {
 module.exports.read_all_files = read_all_files;
 
 /** 读取文件目录 */
-module.exports.read_sub_directories = path => fs
-    .readdirSync(path)
-    .map(ele => `${path}/${ele}`)
-    .filter(ele => fs.statSync(ele).isDirectory());
+module.exports.read_sub_directories = path => {
+    var directories = [];
+    fs.readdirSync(path).forEach(ele => {
+        let child = path + '/' + ele;
+        let info = fs.statSync(child);
+        if (info.isDirectory()) {
+            directories.push(child);
+        }
+    });
+    return directories;
+};
 
 /** 封装的 ProgressBar 工具 */
 module.exports.ProgressBar = function (description, bar_length){
@@ -73,15 +80,27 @@ module.exports.ProgressBar = function (description, bar_length){
     // 拼接黑色条
     var cell = '';
     for (var i=0;i<this.length;i++) {
-        cell += i<cell_num ? '█' : '░';
+    cell += i<cell_num ? '█' : '░';
     }
     this.error += opts.err? `\n${opts.err}`:'';
     // 拼接最终文本
-    var cmdText = `${this.description}: ${(100*percent).toFixed(2)}% ${cell} ${opts.completed}/${opts.total}\n${opts.msg||''}\n${this.error}`;
+    var cmdText = `${this.description}: ${(100*percent).toFixed(1)}% ${cell} ${opts.completed}/${opts.total}\n${opts.msg||''}\n${this.error}`;
     // 在单行输出文本
     slog(cmdText);
     };
 };
 
+module.exports.truePath = paths => {
+    let result = '';
+    paths.forEach(
+        ele=>{
+            result += ele
+            if (!fs.existsSync(result)) fs.mkdirSync(result);
+            result += '/'
+        }
+    )
+    return result
+
+}
 
 module.exports.kvImport = "西索酱's excels tool";
