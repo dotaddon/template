@@ -1,0 +1,28 @@
+// Place your settings in this file to overwrite default and user settings.
+// 将您的设置放置在此文件中以覆盖默认设置和用户设置。
+{
+   //-------- Search configuration --------
+   //-------- 检索配置 --------
+
+   // Configure glob patterns for excluding files and folders in searches. Inherits all glob patterns from the files.exclude setting.
+   // 配置全局模式以排除搜索中的文件和文件夹。从files.exclude设置继承所有全局模式。
+   "search.exclude": {
+      "**/node_modules": true,
+   },
+
+   //-------- Files configuration --------
+   //-------- 文件配置 --------
+   
+   // Configure glob patterns for excluding files and folders.
+   // 配置全局模式以排除文件和文件夹。
+   "files.exclude": {
+      "**/node_modules": true,
+      "*.vscode": true,
+      "*.gitignore": true,
+      "*.gitattributes": true,
+      "*.editorconfig": true,
+      "yarn.lock": true,
+      "package-lock.json": true,
+      "LICENSE": true,
+   }
+}
