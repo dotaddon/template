@@ -234,6 +234,7 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
                 err:single_excel_filter(file, bNpc, path_from, path_goto)
             })
         );
+        if(!bNpc) {save_lang_kv(path_goto)}
     }
     program.option('-w, --watch', 'Watch Mode').parse(process.argv);
     if (program.watch) {
@@ -244,8 +245,8 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
             const bNpc = path_root=='npc';
             chokidar.watch(path_from).on('change', (file) => {
                 console.log(single_excel_filter(file, bNpc, path_from, path_goto))
-                if(bNpc) return;
-                save_lang_kv(path_goto);
+                if(!bNpc) {save_lang_kv(path_goto)}
+                
             });
         }
     }
