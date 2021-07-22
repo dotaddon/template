@@ -7,6 +7,7 @@ const chokidar = require('chokidar');
 const { read_all_files, ProgressBar, kvImport } = require('./utils');
 
 const pb = new ProgressBar('excel 2 kv 编译器',5);
+const vertical_key = 'vertical_keys'
 const path_excel ={
     数据:'数据',
     方言:'资源',
@@ -38,72 +39,94 @@ const depth  = n=> {
 
 function row_data_to_dict( key_names, row_data, i, parent_name) {
     let dct = {};
+    if (i == null) i = -1;
+    if (row_data.length<=2) return {table:row_data[1].toString(), index:i};
     if (parent_name == null) parent_name = '';
     while (i < row_data.length && i < key_names.length) {
+        i++;
         key_name = key_names[i];
-        if (IsNull(key_name )) {
-            i++;
-            continue;
-        }
+        if (IsNull(key_name )) continue;
+
         key_name = key_name.toString();
-        if (key_name.indexOf('[{]') >= 0) {
-            i++;
+        if (key_name.indexOf('[}]') >= 0) {
+            return { table: dct, index: i };
+        } else if (key_name.indexOf('[{]') >= 0) {
             let pn = key_name.replace('[{]', '');
-            let ret_val = row_data_to_dict( key_names, row_data, i, pn);
-            dct[pn] = ret_val.dct;
-            i = ret_val.i + 1;
-        } else if (key_name.indexOf('[}]') >= 0) {
-            return { dct: dct, i: i };
+            let {table,index} = row_data_to_dict( key_names, row_data, i, pn);
+            dct[pn] = table;
+            i = index;
         } else {
             data = row_data[i];
-            if (IsNull(data )) {
-                i++;
-                continue;
-            }
+            if (IsNull(data ))  continue;
 
-            // 处理AttachWearables
-            if (parent_name == 'AttachWearables') {
-                dct[key_name] = { ItemDef: clean_data(data) };
-            } else if (parent_name == 'AbilitySpecial') {
-                // 写入ability specials
-                let datas = data.toString().split(' ');
-                let has_float = false;
-                let special_key_name;
-                datas.forEach((d) => {
-                    if (isNaN(d)) special_key_name = d;
-                    else if (parseFloat(d) % 1 != 0) has_float = true;
-                });
-                data = clean_data(data)
-                    .replace(special_key_name + ' ', '')
-                    .replace(special_key_name, '');
-                dct[key_name] = { var_type: `FIELD_${has_float ? 'FLOAT' : 'INTEGER'}`, [ !IsNull(special_key_name) ? special_key_name : `var_${key_name}`]: data };
-            } else {
-                dct[key_name] = clean_data(data);
-            } 
-            // else if (key_name.indexOf('Ability') >= 0) {
-            //     // 这里要注意，只要定义了技能的key，哪怕没有数据，也要填一个"”，否则不能正确覆盖为空技能
-            //     dct[key_name] = '';
-            // }
-            i++;
+            switch (parent_name) {
+                case 'AttachWearables':// 处理AttachWearables
+                    dct[key_name] = { ItemDef: clean_data(data) };
+                    break;
+                case 'AbilitySpecial':// 写入ability specials
+                    let datas = data.toString().split(' ');
+                    let has_float = false;
+                    let special_key_name;
+                    datas.forEach((d) => {
+                        if (isNaN(d)) special_key_name = d;
+                        else if (parseFloat(d) % 1 != 0) has_float = true;
+                    });
+                    data = clean_data(data)
+                        .replace(special_key_name + '\n', special_key_name + ' ')
+                        .replace(special_key_name + ' ',  special_key_name)
+                        .replace(special_key_name, '');
+                    dct[key_name] = { var_type: `FIELD_${has_float ? 'FLOAT' : 'INTEGER'}`, [ !IsNull(special_key_name) ? special_key_name : `var_${key_name}`]: data };
+                    break;
+            
+                default:
+                    dct[key_name] = clean_data(data);
+                    break;
+            }
         }
     }
-    return { dct: dct, i: i };
+    return { table: dct, index: i };
 }
 
-function single_excel_to_npc(rowval) {
+function single_excel_to_npc(rowval, name) {
     let key_row = rowval[excel_keyname];
-    let key_in_column = (key_row[0] == 'vertical_keys')?
-        (val)=>val[1].toString():
-        (val,key)=>row_data_to_dict( key, val, 0).dct;
-
-        let kv_data = {};
-    for (i = excel_keyname+1; i < rowval.length; ++i) {
-        let row_data = rowval[i];
-        let main_key = row_data[0];
-        if (main_key == null) continue;
-        let ret_val = key_in_column( row_data,key_row );
-        kv_data[main_key] = ret_val;
+    let kv_data = {};
+    if (key_row[0] == vertical_key) {
+        for (let j = 1; j < key_row.length; j++) {
+            if(!key_row[j]) continue;
+            let v_data = {}
+            
+            for (i = excel_keyname+1; i < rowval.length; ++i) {
+                let row_data = rowval[i];
+                let main_key = row_data[0];
+                if (main_key == null) continue;
+                let ret_val = row_data[j];
+                if (ret_val == null) continue;
+                v_data[main_key] = ret_val.toString();
+            }
+            
+            if(key_row.length<=2) kv_data = v_data; else
+            if(!kv_data[key_row[j]] ) kv_data[key_row[j]] = v_data;
+        }
+    } else {
+        let key_in_column;
+        switch (name) {
+            case 'template':
+                key_in_column = (val)=>val[1].toString()
+                break;
+        
+            default:
+                key_in_column = (val,key)=>row_data_to_dict( key, val ).table
+                break;
+        }
+        for (i = excel_keyname+1; i < rowval.length; ++i) {
+            let row_data = rowval[i];
+            let main_key = row_data[0];
+            if (main_key == null) continue;
+            let ret_val = key_in_column( row_data,key_row );
+            kv_data[main_key] = ret_val;
+        }
     }
+    
     return kv_data;
 }
 
@@ -188,7 +211,7 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
     if (rowval.length < excel_keyname+2)
         return `忽略空白文件=>${file}\n  至少需要${excel_keyname+2}行（注释，关键数据）`;
 
-    let kv_data = bNpc ? single_excel_to_npc(rowval) : single_excel_to_localze(rowval);
+    let kv_data = bNpc ? single_excel_to_npc(rowval,sheet.name) : single_excel_to_localze(rowval);
     let datasum = Object.keys(kv_data).length;
     if (datasum <= 0)
         return `忽略异常文件=>${file}\n  实际数据长度只有${datasum}`;
@@ -214,7 +237,6 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
 }
 
 (async () => {
-    
     for(const path_root in path_excel){
         const path_from = `表格\\${path_root}`;
         const path_goto = path_excel[path_root];
