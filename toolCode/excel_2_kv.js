@@ -127,14 +127,14 @@ function single_excel_to_localze(rowval) {
     return kv_data;
 }
 
-const save_lang_kv = async (path) => {
-    let index = 0
+const save_lang_kv = async (dir) => {
+    let index = 1
     for (const language in locali_data) {
-        let file_name = `/addon_${language.toLowerCase()}.txt`;
-        fs.writeFileSync(path+file_name, `"${kvImport}" ${jskv.encode(locali_data[language])}`);
+        let file_name = path.join(dir,`addon_${language.toLowerCase()}.txt`);
+        fs.writeFileSync(file_name, `"${kvImport}" ${jskv.encode(locali_data[language])}`);
         pb.render({ 
+            total: index,
             completed: index++,
-            total: 1+index,
             msg:`写入语言文件完成 => ${file_name}`
         })
     }
@@ -194,19 +194,12 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
         return `忽略异常文件=>${file}\n  实际数据长度只有${datasum}`;
 
     if(bNpc){
-        let outpath = file
-            .replace('\\', '/')
-            .replace(path_from, path_goto)
-            .replace('.xlsx', '.txt');
-        let parenti = outpath.lastIndexOf('/');
-        let out_dir = outpath.substr(0, parenti);
-
-        let file_name = outpath.substr(parenti+1, outpath.length).replace('.txt', '');
+        let file_path = path.dirname(file).replace(path_from, path_goto)
+        let file_name = path.basename(file).replace(extName, '')
+        let out_path  = path.join(file_path,`${file_name}.txt`)
         save_npc_declaration(file_name, rowval[1]);
-
-        if (!fs.existsSync(out_dir)) fs.mkdirSync(out_dir);
-        fs.writeFileSync(outpath, `"${kvImport}" ${jskv.encode(kv_data)}`);
-            // return `${extName}->kv成功=> ${outpath} , \n项目总数 ->${datasum}`;
+        fs.writeFileSync(out_path, `"${kvImport}" ${jskv.encode(kv_data)}`);
+        // return `${extName}->kv成功=> ${outpath} , \n项目总数 ->${datasum}`;
 
     } else {
         for(const i in kv_data){
@@ -223,9 +216,9 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
 (async () => {
     
     for(const path_root in path_excel){
-        const path_from = `表格/${path_root}`;
+        const path_from = `表格\\${path_root}`;
         const path_goto = path_excel[path_root];
-        const bNpc = path_root=='npc';
+        const bNpc = path_root=='数据';
         const fils = read_all_files(path_from)
         fils.forEach(
             (file,index) => pb.render({ 
@@ -240,9 +233,9 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
     if (program.watch) {
         console.log('进入后台同步');
         for(const path_root in path_excel){
-            const path_from = `表格/${path_root}`;
+            const path_from = `表格\\${path_root}`;
             const path_goto = path_excel[path_root];
-            const bNpc = path_root=='npc';
+            const bNpc = path_root=='数据';
             chokidar.watch(path_from).on('change', (file) => {
                 console.log(single_excel_filter(file, bNpc, path_from, path_goto))
                 if(!bNpc) {save_lang_kv(path_goto)}
