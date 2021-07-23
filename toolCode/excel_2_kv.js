@@ -7,7 +7,11 @@ const chokidar = require('chokidar');
 const { read_all_files, ProgressBar, kvImport } = require('./utils');
 
 const pb = new ProgressBar('excel 2 kv 编译器',5);
-const vertical_key = 'vertical_keys'
+const vertical_key = [
+    'vertical_keys',
+    'localize',
+    'tooltip',
+]
 const path_excel ={
     数据:'数据',
     方言:'资源',
@@ -37,11 +41,11 @@ const depth  = n=> {
     return str;
 }
 
-function row_data_to_dict( key_names, row_data, i, parent_name) {
+function row_data_to_dict( key_names, row_data, i = -1, parent_name = '') {
     let dct = {};
-    if (i == null) i = -1;
-    if (row_data.length<=2) return {table:row_data[1].toString(), index:i};
-    if (parent_name == null) parent_name = '';
+    if (row_data.length<=2) 
+        return {dct:row_data[1].toString(), i:i};
+
     while (i < row_data.length && i < key_names.length) {
         i++;
         key_name = key_names[i];
@@ -49,12 +53,12 @@ function row_data_to_dict( key_names, row_data, i, parent_name) {
 
         key_name = key_name.toString();
         if (key_name.indexOf('[}]') >= 0) {
-            return { table: dct, index: i };
+            return { dct: dct, i: i };
         } else if (key_name.indexOf('[{]') >= 0) {
             let pn = key_name.replace('[{]', '');
-            let {table,index} = row_data_to_dict( key_names, row_data, i, pn);
-            dct[pn] = table;
-            i = index;
+            let dict = row_data_to_dict( key_names, row_data, i, pn);
+            dct[pn] = dict.dct;
+            i = dict.i;
         } else {
             data = row_data[i];
             if (IsNull(data ))  continue;
@@ -84,68 +88,53 @@ function row_data_to_dict( key_names, row_data, i, parent_name) {
             }
         }
     }
-    return { table: dct, index: i };
+    return { dct: dct, i: i };
 }
 
-function single_excel_to_npc(rowval, name) {
+function excel_key_in_column(rowval, name) {
     let key_row = rowval[excel_keyname];
     let kv_data = {};
-    if (key_row[0] == vertical_key) {
-        for (let j = 1; j < key_row.length; j++) {
-            if(!key_row[j]) continue;
-            let v_data = {}
-            
-            for (i = excel_keyname+1; i < rowval.length; ++i) {
-                let row_data = rowval[i];
-                let main_key = row_data[0];
-                if (main_key == null) continue;
-                let ret_val = row_data[j];
-                if (ret_val == null) continue;
-                v_data[main_key] = ret_val.toString();
-            }
-            
-            if(key_row.length<=2) kv_data = v_data; else
-            if(!kv_data[key_row[j]] ) kv_data[key_row[j]] = v_data;
-        }
-    } else {
-        let key_in_column;
-        switch (name) {
-            case 'template':
-                key_in_column = (val)=>val[1].toString()
-                break;
-        
-            default:
-                key_in_column = (val,key)=>row_data_to_dict( key, val ).table
-                break;
-        }
-        for (i = excel_keyname+1; i < rowval.length; ++i) {
-            let row_data = rowval[i];
-            let main_key = row_data[0];
-            if (main_key == null) continue;
-            let ret_val = key_in_column( row_data,key_row );
-            kv_data[main_key] = ret_val;
-        }
-    }
+    let key_in_column;
+    switch (name) {
+        case 'template':
+            key_in_column = (val)=>val[1].toString()
+            break;
     
+        default:
+            key_in_column = (val,key)=>row_data_to_dict( key, val ).dct
+            break;
+    }
+
+    for (i = excel_keyname+1; i < rowval.length; ++i) {
+        let row_data = rowval[i];
+        let main_key = row_data[0];
+        if (main_key == null) continue;
+        let ret_val = key_in_column( row_data,key_row );
+        kv_data[main_key] = ret_val;
+    }
+
     return kv_data;
 }
 
-function single_excel_to_localze(rowval) {
+function excel_key_in_row(rowval) {
     let key_row = rowval[excel_keyname];
-    let key_in_column = (val)=>val.toString();
     let kv_data = {};
 
-    for (j = 1; j < key_row.length; ++j) {
-        let language = key_row[j]
-        kv_data[language]={}
+    for (let j = 1; j < key_row.length; j++) {
+        if(!key_row[j]) continue;
+        let v_data = {}
+        
         for (i = excel_keyname+1; i < rowval.length; ++i) {
             let row_data = rowval[i];
             let main_key = row_data[0];
             if (main_key == null) continue;
             let ret_val = row_data[j];
             if (ret_val == null) continue;
-            kv_data[language][main_key] = key_in_column(ret_val);
+            v_data[main_key] = ret_val.toString();
         }
+        
+        if(key_row.length<=2) kv_data = v_data; else
+        if(!kv_data[key_row[j]] ) kv_data[key_row[j]] = v_data;
     }
     return kv_data;
 }
@@ -167,7 +156,7 @@ const save_npc_declaration = async (file_name, keys) => {
     if( declaration[file_name] == keys)
         return;
 
-    declaration[file_name.replace('npc\\','')] = keys;
+    declaration[file_name.replace('数据\\','')] = keys;
     const path_into = '交互/declaration/async_customdata.d.ts';
     let str = 'declare interface CustomUIConfig {\n';
     let dp = 0;
@@ -201,8 +190,7 @@ const save_npc_declaration = async (file_name, keys) => {
 
 function single_excel_filter(file, bNpc, path_from, path_goto) {
     let extName = path.extname(file)
-    if ( ( extName!= '.xlsx' && extName != '.xls')
-     || file.indexOf('~$') >= 0 )
+    if ( ( extName!= '.xlsx' && extName != '.xls') || file.indexOf('~$') >= 0 )
         return `忽略非Excel文件=> ${file}`;
 
     let sheets = xlsx.parse(file);
@@ -211,7 +199,7 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
     if (rowval.length < excel_keyname+2)
         return `忽略空白文件=>${file}\n  至少需要${excel_keyname+2}行（注释，关键数据）`;
 
-    let kv_data = bNpc ? single_excel_to_npc(rowval,sheet.name) : single_excel_to_localze(rowval);
+    let kv_data = vertical_key.indexOf(sheet.name )<0 ? excel_key_in_column(rowval,sheet.name) : excel_key_in_row(rowval);
     let datasum = Object.keys(kv_data).length;
     if (datasum <= 0)
         return `忽略异常文件=>${file}\n  实际数据长度只有${datasum}`;
