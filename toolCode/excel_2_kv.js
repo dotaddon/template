@@ -5,6 +5,7 @@ const jskv = require('dota-js-kv');
 const program = require('commander');
 const chokidar = require('chokidar');
 const { read_all_files, ProgressBar, kvImport } = require('./utils');
+const transform = require('./transform')
 
 const pb = new ProgressBar('excel 2 kv 编译器',5);
 const vertical_key = [
@@ -20,17 +21,6 @@ const excel_keyname = 1; // 第二行存键名
 let locali_data = {};
 let declaration = {};
 
-const clean_data = da => {
-    if (!isNaN(da)) {
-        let number = parseFloat(da);
-        if (number % 1 != 0)
-            da = number.toFixed(4);
-    }
-    return da.toString();
-};
-
-const IsNull = p=> p == null|| (p == '' && typeof(p)!='number' );//|| p == ''
-
 const depth  = n=> {
     let str = '';
     let index = 0
@@ -41,69 +31,11 @@ const depth  = n=> {
     return str;
 }
 
-function row_data_to_dict( key_names, row_data, i = -1, parent_name = '') {
-    let dct = {};
-    if (row_data.length<=2) 
-        return {dct:row_data[1].toString(), i:i};
 
-    while (i < row_data.length && i < key_names.length) {
-        i++;
-        key_name = key_names[i];
-        if (IsNull(key_name )) continue;
-
-        key_name = key_name.toString();
-        if (key_name.indexOf('[}]') >= 0) {
-            return { dct: dct, i: i };
-        } else if (key_name.indexOf('[{]') >= 0) {
-            let pn = key_name.replace('[{]', '');
-            let dict = row_data_to_dict( key_names, row_data, i, pn);
-            dct[pn] = dict.dct;
-            i = dict.i;
-        } else {
-            data = row_data[i];
-            if (IsNull(data ))  continue;
-
-            switch (parent_name) {
-                case 'AttachWearables':// 处理AttachWearables
-                    dct[key_name] = { ItemDef: clean_data(data) };
-                    break;
-                case 'AbilitySpecial':// 写入ability specials
-                    let datas = data.toString().split(' ');
-                    let has_float = false;
-                    let special_key_name;
-                    datas.forEach((d) => {
-                        if (isNaN(d)) special_key_name = d;
-                        else if (parseFloat(d) % 1 != 0) has_float = true;
-                    });
-                    data = clean_data(data)
-                        .replace(special_key_name + '\n', special_key_name + ' ')
-                        .replace(special_key_name + ' ',  special_key_name)
-                        .replace(special_key_name, '');
-                    dct[key_name] = { var_type: `FIELD_${has_float ? 'FLOAT' : 'INTEGER'}`, [ !IsNull(special_key_name) ? special_key_name : `var_${key_name}`]: data };
-                    break;
-            
-                default:
-                    dct[key_name] = clean_data(data);
-                    break;
-            }
-        }
-    }
-    return { dct: dct, i: i };
-}
-
-function excel_key_in_column(rowval, name) {
+function excel_key_in_column(rowval, sheetName) {
     let key_row = rowval[excel_keyname];
     let kv_data = {};
-    let key_in_column;
-    switch (name) {
-        case 'template':
-            key_in_column = (val)=>val[1].toString()
-            break;
-    
-        default:
-            key_in_column = (val,key)=>row_data_to_dict( key, val ).dct
-            break;
-    }
+    let key_in_column = transform[sheetName] || transform.default;
 
     for (i = excel_keyname+1; i < rowval.length; ++i) {
         let row_data = rowval[i];
