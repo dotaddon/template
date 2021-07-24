@@ -10,27 +10,17 @@ const transform = require('./transform')
 const pb = new ProgressBar('excel 2 kv 编译器',5);
 const vertical_key = [
     'vertical_keys',
-    'localize',
+    'Tokens',
     'tooltip',
 ]
 const path_excel ={
     数据:'数据',
     方言:'资源',
 }
+const declaraPath = '交互\\declaration';
 const excel_keyname = 1; // 第二行存键名
 let locali_data = {};
 let declaration = {};
-
-const depth  = n=> {
-    let str = '';
-    let index = 0
-    do {
-        str += '  ';
-        index++;
-    } while (index<=n);
-    return str;
-}
-
 
 function excel_key_in_column(rowval, sheetName) {
     let key_row = rowval[excel_keyname];
@@ -84,39 +74,15 @@ const save_lang_kv = async (dir) => {
     }
 }
 
-const save_npc_declaration = async (file_name, keys) => {
-    if( declaration[file_name] == keys)
-        return;
-
-    declaration[file_name.replace('数据\\','')] = keys;
-    const path_into = '交互/declaration/async_customdata.d.ts';
+const save_npc_declaration = async (dir) => {
+    const path_into = path.join(dir,`async_customdata.d.ts`);
     let str = 'declare interface CustomUIConfig {\n';
-    let dp = 0;
     for(const name in declaration){
-        str += `${depth(dp)}${name}:{\n`;
-        dp ++;
-        str += `${depth(dp)}[id:string]:{\n`;
-        dp ++;
-        declaration[name].forEach(
-            ele => {
-                ele = ele.toString();
-                if(ele.indexOf('[{]') >= 0){
-                    str += `${depth(dp)}${ele.replace('[{]','')}:{\n`;
-                    dp++;
-                }else if(ele.indexOf('[}]') >= 0){
-                    dp--;
-                    str += `${depth(dp)}},\n`;
-                }else{
-                    str += `${depth(dp)}${ele}:string,\n`
-                }
-            }
-        )
-        dp --;
-        str += `${depth(dp)}},\n`;
-        dp --;
-        str += `${depth(dp)}},\n`;
+        let key_in_column = transform[`declare_${declaration[name].name}`] || transform.declare_default;
+        str += `  ${name}:{\n${key_in_column(declaration[name].keys)}  },\n`;
     }
     str +='}';
+
     fs.writeFileSync(path_into, str);
 }
 
@@ -140,7 +106,9 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
         let file_path = path.dirname(file).replace(path_from, path_goto)
         let file_name = path.basename(file).replace(extName, '')
         let out_path  = path.join(file_path,`${file_name}.txt`)
-        save_npc_declaration(file_name, rowval[1]);
+        if( !declaration[file_name] || declaration[file_name].keys != rowval[1]){
+            declaration[file_name.replace('数据\\','')] = {keys:rowval[1], name:sheet.name}
+        }
         fs.writeFileSync(out_path, `"${kvImport}" ${jskv.encode(kv_data)}`);
         // return `${extName}->kv成功=> ${outpath} , \n项目总数 ->${datasum}`;
 
@@ -157,6 +125,7 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
 }
 
 (async () => {
+    if(!fs.existsSync(declaraPath)) fs.mkdirSync(declaraPath);
     for(const path_root in path_excel){
         const path_from = `表格\\${path_root}`;
         const path_goto = path_excel[path_root];
@@ -170,6 +139,7 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
             })
         );
         if(!bNpc) {save_lang_kv(path_goto)}
+        else{save_npc_declaration(declaraPath)}
     }
     program.option('-w, --watch', 'Watch Mode').parse(process.argv);
     if (program.watch) {
@@ -181,6 +151,7 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
             chokidar.watch(path_from).on('change', (file) => {
                 console.log(single_excel_filter(file, bNpc, path_from, path_goto))
                 if(!bNpc) {save_lang_kv(path_goto)}
+                else{save_npc_declaration(declaraPath)}
                 
             });
         }

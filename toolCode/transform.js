@@ -11,6 +11,16 @@ const clean_data = da => {
 
 const IsNull = p=> p == null|| (p == '' && typeof(p)!='number' );//|| p == ''
 
+const depth  = n=> {
+    let str = '';
+    let index = 0
+    do {
+        str += '  ';
+        index++;
+    } while (index<=n);
+    return str;
+}
+
 module.exports.default = ( row_data, key_names) => {
     if (row_data.length<=2)
         return row_data[1].toString();
@@ -63,4 +73,38 @@ module.exports.default = ( row_data, key_names) => {
 
     return row_data_to_dict('')
 
+}
+
+module.exports.declare_vertical_keys = (datas ) =>{
+    let str= ''
+    let dp = 1
+    datas.filter((ele,i)=>i!=0).forEach(
+        ele => str += `${depth(dp)}${ele}:{\n${depth(dp+1)}[id:string]:string\n${depth(dp)}},\n`
+    )
+    return str
+}
+
+module.exports.declare_default = (datas ) =>{
+
+    let dp = 1
+    let str = `${depth(dp)}[id:string]:{\n`;
+    dp ++;
+    datas.forEach(
+        ele => {
+            ele = ele.toString();
+            if(ele.indexOf('[{]') >= 0){
+                str += `${depth(dp)}${ele.replace('[{]','')}:{\n`;
+                dp++;
+            }else if(ele.indexOf('[}]') >= 0){
+                dp--;
+                str += `${depth(dp)}},\n`;
+            }else{
+                str += `${depth(dp)}${ele}:string,\n`
+            }
+        }
+    )
+    dp --;
+    str += `${depth(dp)}},\n`;
+
+    return str
 }
