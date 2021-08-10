@@ -1,6 +1,6 @@
 {
     "name": "tsdotarpg",
-    "mainmap": "",
+    "mainmap": "dota",
     "version": "1.0.4",
     "description": "a ts template for dota2 rpg, together with some helper scripts",
     "license": "MIT",
