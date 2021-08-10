@@ -14,7 +14,7 @@ const vertical_key = [
     'tooltip',
 ]
 const path_excel ={
-    数据:'数据',
+    数据:'编译\\game\\scripts\\npc',
     方言:'资源',
 }
 const declaraPath = '交互\\declaration';
@@ -105,7 +105,7 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
     if(bNpc){
         let file_path = path.dirname(file).replace(path_from, path_goto)
         let file_name = path.basename(file).replace(extName, '')
-        let out_path  = path.join(file_path,`${file_name}.txt`)
+        let out_path  = path.join(file_path,`${file_name}.kv`)
         if( !declaration[file_name] || declaration[file_name].keys != rowval[1]){
             declaration[file_name.replace('数据\\','')] = {keys:rowval[1], name:sheet.name}
         }

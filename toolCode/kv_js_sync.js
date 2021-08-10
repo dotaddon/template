@@ -6,8 +6,8 @@ const chokidar = require('chokidar');
 const { read_all_files, ProgressBar, kvImport, truePath } = require('./utils');
 
 const pb = new ProgressBar('同步KV-JS文件',5);
-const path_from = '数据';
-const path_goto = truePath(['交互', '编译', 'scripts', 'custom_game']);
+const path_from = '编译\\game\\scripts\\npc';
+const path_goto = truePath([ '编译', 'content', 'panorama', 'scripts', 'custom_game']);
 function kv_js_sync() {
     let files = read_all_files(path_from);
     let out_put = '';

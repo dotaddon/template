@@ -2,7 +2,7 @@
     "include": ["../游戏", "../共用声明" ],
     "compilerOptions": {
         // "rootDir": "../游戏",
-        "outDir": "编译",//输出目录
+        "outDir": "../编译/game/scripts/vscripts",//输出目录
         
         "target": "esnext",
         "lib": ["esnext"],
