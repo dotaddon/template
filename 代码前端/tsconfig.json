@@ -1,5 +1,5 @@
 {
-    "include": ["../交互", "../共用声明"],
+    "include": ["../代码前端", "../代码通讯"],
     "compilerOptions": {
         "target": "es2017",
         "lib": ["es2017"],
