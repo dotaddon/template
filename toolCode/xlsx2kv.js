@@ -11,13 +11,15 @@ const pb = new ProgressBar('excel 2 kv 编译器',5);
 const vertical_key = [
     'vertical_keys',
     'Tokens',
-    'tooltip',
+    'DOTA_Tooltip_',
+    'DOTA_Tooltip_ability_',
+    'DOTA_Tooltip_Ability_item_',
 ]
 const path_excel ={
     数据:'编译\\game\\scripts\\npc',
     方言:'资源',
 }
-const declaraPath = '代码前端\\declaration';
+const declaraPath = '交互\\declaration';
 const excel_keyname = 1; // 第二行存键名
 let locali_data = {};
 let declaration = {};
@@ -38,10 +40,10 @@ function excel_key_in_column(rowval, sheetName) {
     return kv_data;
 }
 
-function excel_key_in_row(rowval) {
+function excel_key_in_row(rowval, sheetName) {
     let key_row = rowval[excel_keyname];
     let kv_data = {};
-
+    let prekey = sheetName.indexOf('Tooltip')>0 ? sheetName : '';
     for (let j = 1; j < key_row.length; j++) {
         if(!key_row[j]) continue;
         let v_data = {}
@@ -52,7 +54,7 @@ function excel_key_in_row(rowval) {
             if (main_key == null) continue;
             let ret_val = row_data[j];
             if (ret_val == null) continue;
-            v_data[main_key] = ret_val.toString();
+            v_data[prekey+main_key] = ret_val.toString();
         }
         
         if(key_row.length<=2) kv_data = v_data; else
@@ -97,7 +99,7 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
     if (rowval.length < excel_keyname+2)
         return `忽略空白文件=>${file}\n  至少需要${excel_keyname+2}行（注释，关键数据）`;
 
-    let kv_data = vertical_key.indexOf(sheet.name )<0 ? excel_key_in_column(rowval,sheet.name) : excel_key_in_row(rowval);
+    let kv_data = vertical_key.indexOf(sheet.name )<0 ? excel_key_in_column(rowval,sheet.name) : excel_key_in_row(rowval,sheet.name);
     let datasum = Object.keys(kv_data).length;
     if (datasum <= 0)
         return `忽略异常文件=>${file}\n  实际数据长度只有${datasum}`;
