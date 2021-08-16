@@ -76,35 +76,24 @@ module.exports.default = ( row_data, key_names) => {
 }
 
 module.exports.declare_vertical_keys = (datas ) =>{
-    let str= ''
     let dp = 1
-    datas.filter((ele,i)=>i!=0).forEach(
-        ele => str += `${depth(dp)}${ele}:{\n${depth(dp+1)}[id:string]:string\n${depth(dp)}},\n`
-    )
-    return str
+    return datas.reduce((pre,cur,id)=>{
+        cur = cur.toString()
+        if (cur.indexOf('[}]')>=0) { dp--; pre +=`${depth(dp)}},\n`; } else
+        if (cur.indexOf('[{]')>=0) { dp++; pre +=`${depth(dp-1)}${cur.replace('[{]','')}:{\n`; } else
+        pre +=`${depth(dp)}${cur}: Record<string,string>,\n`;
+
+        return pre;
+    },'')
 }
 
 module.exports.declare_default = (datas ) =>{
-
-    let dp = 1
-    let str = `${depth(dp)}[id:string]:{\n`;
-    dp ++;
-    datas.forEach(
-        ele => {
-            ele = ele.toString();
-            if(ele.indexOf('[{]') >= 0){
-                str += `${depth(dp)}${ele.replace('[{]','')}:{\n`;
-                dp++;
-            }else if(ele.indexOf('[}]') >= 0){
-                dp--;
-                str += `${depth(dp)}},\n`;
-            }else{
-                str += `${depth(dp)}${ele}:string,\n`
-            }
-        }
-    )
-    dp --;
-    str += `${depth(dp)}},\n`;
-
-    return str
+    let dp = 2
+    return datas.reduce((pro,cur)=>{
+        cur = cur.toString();
+        if(cur.indexOf('[{]') >= 0){ dp++; pro += `${depth(dp-1)}${cur.replace('[{]','')}:{\n`; } else 
+        if(cur.indexOf('[}]') >= 0){ dp--; pro += `${depth(dp)}},\n`; } else
+        pro += `${depth(dp)}${cur}:string,\n`;
+        return pro
+    },`${depth(1)}[id:string]:{\n`) + `${depth(1)}},\n`;
 }

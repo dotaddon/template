@@ -44,21 +44,28 @@ function excel_key_in_row(rowval, sheetName) {
     let key_row = rowval[excel_keyname];
     let kv_data = {};
     let prekey = sheetName.indexOf('Tooltip')>0 ? sheetName : '';
+    let parent = []
     for (let j = 1; j < key_row.length; j++) {
-        if(!key_row[j]) continue;
-        let v_data = {}
+        let kye_j = key_row[j];
+        if(!kye_j ) continue;
+            kye_j = kye_j.toString();
+        if( kye_j.indexOf('[}]')>=0) {
+            parent.pop() 
+            continue ;
+        }
         
+        parent.push(kye_j.replace('[{]',''));
+        let lastArr = parent.reduce((pre,cur)=> pre[cur] = pre[cur] || {} ,kv_data)
+        if( kye_j.indexOf('[{]')<0) parent.pop();
+
         for (i = excel_keyname+1; i < rowval.length; ++i) {
             let row_data = rowval[i];
             let main_key = row_data[0];
             if (main_key == null) continue;
             let ret_val = row_data[j];
             if (ret_val == null) continue;
-            v_data[prekey+main_key] = ret_val.toString();
+            lastArr[prekey+main_key] = ret_val.toString();
         }
-        
-        if(key_row.length<=2) kv_data = v_data; else
-        if(!kv_data[key_row[j]] ) kv_data[key_row[j]] = v_data;
     }
     return kv_data;
 }
