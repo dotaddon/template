@@ -24,7 +24,7 @@ module.exports.getDotaPath = async () => {
 };
 
 module.exports.getMapName = () => {
-    if (!/^[a-z]([\d_a-z]+)?$/.test(packageJson.mainmap)) {
+    if (!/^([\d_a-z]+)?$/.test(packageJson.mainmap)) {
         return null
         // throw new Error('Addon name may consist only of lowercase characters, digits, and underscores ' + 'and should start with a letter. Edit `name` field in `package.json` file.');
     }

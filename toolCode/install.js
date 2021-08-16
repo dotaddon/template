@@ -1,7 +1,7 @@
 const assert = require('assert');
 const fs = require('fs-extra');
 const path = require('path');
-const { getAddonName, getDotaPath, ProgressBar } = require('./utils');
+const { getAddonName, getDotaPath, ProgressBar, getMapName } = require('./utils');
 
 const pb = new ProgressBar('文件链接到dota2目录',5);
 const linkPath = {
@@ -28,7 +28,8 @@ const items = {
     中立:'scripts/npc/npc_neutral_items_custom.txt',
     技能:'scripts/npc/npc_abilities_custom.txt',
     覆盖:'scripts/npc/npc_abilities_override.txt',
-    商店:'scripts/shops/main_shops.txt',
+    商店:'scripts/shops.txt',
+    自建商店:`scripts/shops/${getMapName()}_shops.txt`,
 }
 
 function linkA2B(sourcePath,targetPath) {
