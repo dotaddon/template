@@ -24,7 +24,7 @@ const excel_keyname = 1; // 第二行存键名
 let locali_data = {};
 let declaration = {};
 
-function excel_key_in_column(rowval, sheetName) {
+function key_in_top(rowval, sheetName) {
     let key_row = rowval[excel_keyname];
     let kv_data = {};
     let key_in_column = transform[sheetName] || transform.default;
@@ -40,7 +40,7 @@ function excel_key_in_column(rowval, sheetName) {
     return kv_data;
 }
 
-function excel_key_in_row(rowval, sheetName) {
+function key_in_left(rowval, sheetName) {
     let key_row = rowval[excel_keyname];
     let kv_data = {};
     let prekey = sheetName.indexOf('Tooltip')>0 ? sheetName : '';
@@ -67,6 +67,8 @@ function excel_key_in_row(rowval, sheetName) {
             lastArr[prekey+main_key] = ret_val.toString();
         }
     }
+    let kv_keys = Object.keys(kv_data)
+    if(kv_keys.length<=1) kv_data = kv_data[kv_keys[0]]
     return kv_data;
 }
 
@@ -106,7 +108,7 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
     if (rowval.length < excel_keyname+2)
         return `忽略空白文件=>${file}\n  至少需要${excel_keyname+2}行（注释，关键数据）`;
 
-    let kv_data = vertical_key.indexOf(sheet.name )<0 ? excel_key_in_column(rowval,sheet.name) : excel_key_in_row(rowval,sheet.name);
+    let kv_data = vertical_key.indexOf(sheet.name )<0 ? key_in_top(rowval,sheet.name) : key_in_left(rowval,sheet.name);
     let datasum = Object.keys(kv_data).length;
     if (datasum <= 0)
         return `忽略异常文件=>${file}\n  实际数据长度只有${datasum}`;
