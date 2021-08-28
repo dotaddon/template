@@ -88,8 +88,8 @@ function connect(sourcePath, targetPath) {
     }
 
     for (const item in items) {
-        const sourcePath = path.resolve(__dirname, '..', '项目', `${item}.kv`);
-        if (!fs.existsSync(sourcePath)) fs.writeFileSync(sourcePath, '');
+        const sourcePath = path.resolve(__dirname, '..', '项目', 'item', `${item}.kv`);
+        if (!fs.existsSync(sourcePath)) continue;
         const targetPath = path.join(addonDir, items[item]);
         const targetRoot = path.dirname(targetPath)
         if (!fs.existsSync(targetRoot)) fs.mkdirSync(targetRoot);
@@ -97,7 +97,7 @@ function connect(sourcePath, targetPath) {
         pb.render({
             completed: index++,
             total: longer,
-            msg: fs.copyFileSync(sourcePath, targetPath)
+            msg: fs.copyFileSync(sourcePath, targetPath)// fs.writeFileSync(targetPath, fs.readFileSync(sourcePath))
         });
     }
 })().catch((error) => {
