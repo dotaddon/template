@@ -1,5 +1,5 @@
 {
-    "include": ["./代码后端", "../代码通讯" ],
+    "include": ["../代码后端", "../代码通讯" ],
     "compilerOptions": {
         // "rootDir": "../代码后端",
         "outDir": "../编译/game/scripts/vscripts",//输出目录
