@@ -42,7 +42,7 @@
         "commander": "6.2.1",
         "dota-js-kv": "0.1.6",
         "file-loader": "6.2.0",
-        "find-steam-app": "1.0.2",
+        "steam-game-path": "^2.0.1",
         "fork-ts-checker-webpack-plugin": "6.0.8",
         "fs-extra": "9.0.1",
         "node-xlsx": "0.15.0",

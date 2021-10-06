@@ -15,8 +15,9 @@ const vertical_key = [
     'DOTA_Tooltip_ability_',
     'DOTA_Tooltip_Ability_item_',
 ]
-const path_excel ={
-    数据:'编译\\game\\scripts\\npc',
+const path_data  = '编译\\game\\scripts\\npc';
+const path_excel = {
+    数据:'项目\\data',
     方言:'资源',
 }
 const declaraPath = '交互\\declaration';
@@ -108,7 +109,8 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
     if (rowval.length < excel_keyname+2)
         return `忽略空白文件=>${file}\n  至少需要${excel_keyname+2}行（注释，关键数据）`;
 
-    let kv_data = vertical_key.indexOf(sheet.name )<0 ? key_in_top(rowval,sheet.name) : key_in_left(rowval,sheet.name);
+    let vertical_tarn = vertical_key.indexOf(sheet.name )<0 ? key_in_top : key_in_left;
+    let kv_data = vertical_tarn(rowval,sheet.name)
     let datasum = Object.keys(kv_data).length;
     if (datasum <= 0)
         return `忽略异常文件=>${file}\n  实际数据长度只有${datasum}`;
@@ -122,6 +124,7 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
         }
         fs.writeFileSync(out_path, `"${kvImport}" ${jskv.encode(kv_data)}`);
         // return `${extName}->kv成功=> ${outpath} , \n项目总数 ->${datasum}`;
+        fs.copyFileSync(out_path, out_path.replace(path_goto , path_data))
 
     } else {
         for(const i in kv_data){
@@ -149,8 +152,8 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
                 err:single_excel_filter(file, bNpc, path_from, path_goto)
             })
         );
-        if(!bNpc) {save_lang_kv(path_goto)}
-        else{save_npc_declaration(declaraPath)}
+        if(!bNpc) save_lang_kv(path_goto);
+        else save_npc_declaration(declaraPath);
     }
     program.option('-w, --watch', 'Watch Mode').parse(process.argv);
     if (program.watch) {
@@ -161,8 +164,8 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
             const bNpc = path_root=='数据';
             chokidar.watch(path_from).on('change', (file) => {
                 console.log(single_excel_filter(file, bNpc, path_from, path_goto))
-                if(!bNpc) {save_lang_kv(path_goto)}
-                else{save_npc_declaration(declaraPath)}
+                if(!bNpc) save_lang_kv(path_goto);
+                else save_npc_declaration(declaraPath);
                 
             });
         }
