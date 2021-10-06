@@ -44,8 +44,11 @@ module.exports.default = ( row_data, key_names) => {
                 if (IsNull(data ))  continue;
     
                 switch (parent_name) {
+                    case 'EquippedItems':// 处理EquippedItems
+                        dct[`Item${key_name}`] = { Item: clean_data(data) };
+                        break;
                     case 'AttachWearables':// 处理AttachWearables
-                        dct[key_name] = { ItemDef: clean_data(data) };
+                        dct[`Wearable${key_name}`] = { ItemDef: clean_data(data) };
                         break;
                     case 'AbilitySpecial':// 写入ability specials
                         let datas = data.toString().split(' ');
