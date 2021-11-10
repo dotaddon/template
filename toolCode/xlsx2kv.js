@@ -20,7 +20,7 @@ const path_excel = {
     数据:'项目\\data',
     方言:'资源',
 }
-const declaraPath = '交互\\declaration';
+const declaraPath = '代码前端\\declaration';
 const excel_keyname = 1; // 第二行存键名
 let locali_data = {};
 let declaration = {};
