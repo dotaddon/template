@@ -1,4 +1,4 @@
-const fs = require('fs-extra');
+const fs = require('fs');
 const path = require('path');
 const jskv = require('dota-js-kv');
 const program = require('commander');

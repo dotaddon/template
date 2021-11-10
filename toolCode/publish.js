@@ -1,6 +1,6 @@
 console.log('开始复制和加密发布脚本的文件');
 
-const fs = require('fs-extra');
+const fs = require('fs');
 const path  = require('path');
 const aesjs = require('aes-js');
 const { read_all_files, read_sub_directories } = require('./utils');

@@ -1,5 +1,6 @@
 const assert = require('assert');
-const fs = require('fs-extra');
+const fs = require('fs');
+const fse = require('fs-extra');
 const path = require('path');
 const { getAddonName, getDotaPath, ProgressBar, getMapName } = require('./utils');
 
@@ -33,7 +34,7 @@ const items = {
 }
 
 function linkA2B(sourcePath,targetPath) {
-    fs.moveSync(sourcePath, targetPath);
+    fse.moveSync(sourcePath, targetPath);
     fs.symlinkSync(targetPath, sourcePath, 'junction');
     return `已建立链接 ${sourcePath} <==> ${targetPath}`
 }

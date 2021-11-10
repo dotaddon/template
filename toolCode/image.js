@@ -1,5 +1,5 @@
 const assert = require('assert');
-const fs = require('fs-extra');
+const fs = require('fs');
 const path = require('path');
 const { getAddonName, getDotaPath, read_all_files, ProgressBar, truePath } = require('./utils');
 

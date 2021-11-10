@@ -1,6 +1,6 @@
 const { getGamePath } = require('steam-game-path');
 const packageJson = require('../package.json');
-const fs = require('fs-extra');
+const fs = require('fs');
 
 // 这里用到一个很实用的 npm 模块，用以在同一行打印文本
 const slog = require('single-line-log').stdout;
