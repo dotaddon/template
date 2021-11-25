@@ -86,8 +86,8 @@ const save_lang_kv = async (dir) => {
     }
 }
 
-const save_npc_declaration = async (dir) => {
-    const path_into = path.join(dir,`async_customdata.d.ts`);
+const write_down_declaration = async () => {
+    const path_into = path.join(declaraPath, `async_customdata.d.ts`);
     let str = 'declare interface CustomUIConfig {\n';
     for(const name in declaration){
         let key_in_column = transform[`declare_${declaration[name].name}`] || transform.declare_default;
@@ -139,37 +139,34 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
 }
 
 (async () => {
-    if(!fs.existsSync(declaraPath)) fs.mkdirSync(declaraPath);
-    for(const path_root in path_excel){
+    if (!fs.existsSync(declaraPath)) fs.mkdirSync(declaraPath);
+    program.option('-w, --watch', 'Watch Mode').parse(process.argv);
+    for (const path_root in path_excel) {
         const path_from = `表格\\${path_root}`;
+        if (!fs.existsSync(path_from)) continue;
         const path_goto = path_excel[path_root];
-        const bNpc = path_root=='数据';
+        if (!fs.existsSync(path_goto)) fs.mkdirSync(path_goto);
+        const bNpc = path_root == '数据';
         const fils = read_all_files(path_from)
         fils.forEach(
-            (file,index) => pb.render({ 
+            (file, index) => pb.render({
                 completed: index,
-                total: fils.length-1,
-                err:single_excel_filter(file, bNpc, path_from, path_goto)
+                total: fils.length - 1,
+                err: single_excel_filter(file, bNpc, path_from, path_goto)
             })
         );
-        if(!bNpc) save_lang_kv(path_goto);
-        else save_npc_declaration(declaraPath);
-    }
-    program.option('-w, --watch', 'Watch Mode').parse(process.argv);
-    if (program.watch) {
-        console.log('进入后台同步');
-        for(const path_root in path_excel){
-            const path_from = `表格\\${path_root}`;
-            const path_goto = path_excel[path_root];
-            const bNpc = path_root=='数据';
+        if (!bNpc) save_lang_kv(path_goto);
+        else write_down_declaration();
+
+        if (program.watch) {
             chokidar.watch(path_from).on('change', (file) => {
-                console.log(single_excel_filter(file, bNpc, path_from, path_goto))
-                if(!bNpc) save_lang_kv(path_goto);
-                else save_npc_declaration(declaraPath);
-                
-            });
+                        console.log(single_excel_filter(file, bNpc, path_from, path_goto))
+                        if (!bNpc) save_lang_kv(path_goto);
+                        else write_down_declaration();
+            })
         }
     }
+
 })().catch((error) => {
     console.error(error);
     process.exit(1);
