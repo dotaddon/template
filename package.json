@@ -9,7 +9,7 @@
     "encrypt_file_paths": [
         ".lua"
     ],
-    "notcpoy_file_paths": [
+    "notcopy_file_paths": [
         ".ts",
         ".bin",
         ".cfg",

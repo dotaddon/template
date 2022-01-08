@@ -7,7 +7,7 @@ const { read_all_files, read_sub_directories } = require('./utils');
 const packageJson = require('../package.json');
 const encrypt_key = packageJson.encrypt_key;
 const encryptPath = packageJson.encrypt_file_paths;
-const notCopyPath = packageJson.notcpoy_file_paths;
+const notCopyPath = packageJson.notcopy_file_paths;
 
 if (!(encrypt_key == null || encrypt_key == '')){
     console.log('ignore encryption, the encrypt_key field is not defined in package.json');
