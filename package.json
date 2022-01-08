@@ -58,11 +58,11 @@
         "webpack-cli": "4.3.0"
     },
     "devDependencies": {
-        "@demon673/react-panorama": "0.2.1",
-        "@moddota/dota-lua-types": "4.13.0",
-        "@moddota/panorama-types": "1.12.0",
-        "typescript": "4.4.4",
-        "typescript-to-lua": "1.1.1",
+        "@demon673/react-panorama": "0.2.2",
+        "@moddota/dota-lua-types": "4.14.0",
+        "@moddota/panorama-types": "1.15.0",
+        "typescript": "4.5.4",
+        "typescript-to-lua": "1.3.1",
         "webpack-panorama": "0.2.0"
     },
     "prettier": {
