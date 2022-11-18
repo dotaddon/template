@@ -28,35 +28,6 @@
 5. 将 `game/scripts/npc`文件夹的内容同步到 `content/panorama/scripts/keyvalues.js`
 6. 批量编译地图、特效、全景图片资源
 
-## 支持的指令
-
-```bash
-# 启动 dota2
-# 如果提供了 <addon_name> 则会载入指定的 addon（默认该项目）
-# 如果提供了  <map_name>  则会自动载入对应的地图名
-yarn launch [--a <addon_name>] [--m <map_name>]
-
-# 进入 开发 模式
-# 监听且实时编译全栈代码，
-# 自动把images目录下的所有图片写入样式，需要启动一次游戏实现编译
-yarn dev
-
-# 执行 发布 操作
-# 将会自动生成 publish 文件夹
-# 并自动 link 到 dota_addons/<addon_name>_publish 文件夹 之后
-# 你可以选择这个文件夹发布
-yarn pro
-
-# 执行 编译 操作
-# 自动编译content 目录下的所有资源到 game目录下
-yarn build
-
-# 执行 安装插件 操作
-# 如果您使用了vscode作为IDE，那么可以使用本条指令快速安装推荐插件
-# 插件不是使用本模版的必备条件，但可以方便码代码
-yarn code
-```
-
 ## 文件夹内容
 
 | 文件夹名      | 功用                                                                    |
@@ -82,10 +53,10 @@ yarn code
 
 如果你要使用这个模板，通常需要拥有以下知识储备：
 
-1. `<b>`掌握`</b>`[Dota2 Workshop Tools](https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools:zh-cn "V 社的创意工坊开发文档") `<b>`了解`</b>`[Dota2 创意工坊工具集](https://support.steampowered.com/kb_cat.php?id=109)
-2. `<b>`掌握`</b>`[TypeScript](https://www.tslang.cn/ "TypeScript的官方文档"), `JavaScript` 的语法，`<b>`了解`</b>`[TypeScriptToLua](https://github.com/TypeScriptToLua/TypeScriptToLua "ts2l的github仓库")
-3. `<b>`掌握`</b>`[react](https://react.docschina.org/ "react的官方文档")的基础知识 和 `<b>`了解`</b>` [react-panorama](https://github.com/ark120202/react-panorama "react全景的github仓库")
-4. `<b>`了解`</b>`[node.js](https://nodejs.org/zh-cn/docs/ "nodejs的官方文档")的基础知识
+1. <b>掌握</b>[Dota2 Workshop Tools](https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools:zh-cn "V 社的创意工坊开发文档") <b>了解</b>[Dota2 创意工坊工具集](https://support.steampowered.com/kb_cat.php?id=109)
+2. <b>掌握</b>[TypeScript](https://www.tslang.cn/ "TypeScript的官方文档"), `JavaScript` 的语法，<b>了解</b>[TypeScriptToLua](https://github.com/TypeScriptToLua/TypeScriptToLua "ts2l的github仓库")
+3. <b>掌握</b>[react](https://react.docschina.org/ "react的官方文档")的基础知识 和 <b>了解</b> [react-panorama](https://github.com/ark120202/react-panorama "react全景的github仓库")
+4. <b>了解</b>[node.js](https://nodejs.org/zh-cn/docs/ "nodejs的官方文档")的基础知识
 
 - 你可以在完成[安装依赖](###使用步骤)后，查看 `node_modules/@moddota/`中的 `dota-lua-types`和 `panorama-types` 来了解 `DOTA2 Typescript API`
 - Xavier：当然，使用强类型语言需要你有更好的代码规范和写声明的觉悟 😉
@@ -95,13 +66,65 @@ yarn code
 
 1. 安装 `node.js`，要求是 above Node v14.10.1 ~~因为低于这个版本的没有测试过~~
 2. `clone` 或 `fork` [本项目](https://gitee.com/takegine/ts-dota-rpg/members#)
-3. 打开 `package.json`，将 `name`修改为你自己喜欢的名字。全小写
-4. 执行 `npm install`或者 `yarn`安装依赖，他应该会自动链接对应的文件夹到你的 `dota 2 beta/dota_addons`,(如果碰到权限问题，请尝试重启)
-5. `yarn dev`，开始你的开发
+3. 打开 `dota2.config.json`，将 `FolderName`修改为你自己喜欢的名字。全小写
+4. 安装依赖
+```bash
+# 包管理工具
+npm i -g pnpm
+# ts执行工具
+npm i -g tsx
+```
+5. 初始化
+```bash
+# 安装依赖与配置环境
+pnpm i
+```
+6. `pnpm dev`，开始你的开发
+
+
+
+### 其他常用方法
+```bash
+# 执行dev 并 启动游戏
+pnpm go
+    
+# 启动 dota2
+# 如果提供了 <addon_name> 则会载入指定的 addon（默认该项目）
+# 如果提供了  <map_name>  则会自动载入对应的地图名
+pnpm launch [--a <addon_name>] [--m <map_name>]
+
+# 进入 开发 模式
+# 监听且实时编译全栈代码，
+# 自动把images目录下的所有图片写入样式，需要启动一次游戏实现编译
+pnpm dev
+
+# 执行 编译 操作
+# 自动编译content 目录下的所有资源到 game目录下
+pnpm compile
+
+# 更新 图片编译目录
+pnpm images
+
+# 规范代码
+pnpm lint
+
+# 安装vscode插件
+# 会在编辑器下方提供快捷按钮
+# 如果您使用了vscode作为IDE，那么可以使用本条指令快速安装推荐插件
+# 插件不是使用本模版的必备条件，但可以方便码代码
+pnpm suggest
+
+
+# 执行 发布 操作
+# 将会自动生成 publish 文件夹
+# 并自动 link 到 dota_addons/<addon_name>_publish 文件夹 之后
+# 你可以选择这个文件夹发布
+pnpm build
+```
 
 ## 可拓展的功能
 
-4. 如果你需要加密，请自行修改 `scripts/publish.js`
+4. 如果你需要加密，请自行修改 `toolCode/publish.js`
 
 ## 未来的计划
 
