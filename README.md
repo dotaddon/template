@@ -1,9 +1,10 @@
-# `<div align='center' ><font size='70'>`TsDotaRPG`</font></div>`
+# `<div align='center' ><font size='70'>`TsDotaRPG 2.0`</font></div>`
 
 ## 梗概
 
 * dota2 自定义游戏开发模板，全汉化目录结构
-* 贡献者：
+* 根据一年来的开发经验，在1.3.3的基础上做了大幅度修改
+* 借鉴了以下作者的开发工具：
   * Moddota
   * ark120202[已故]
   * Xavier

@@ -1,0 +1,22 @@
+{
+    "$schema": "node_modules/@mobilc/utils/schema/dota2.json",
+    "FolderName": "dotasouls",
+    "DefaultMap": "dota",
+    "MaxPlayers": 5,
+    "srcPath":{
+        "panorama": "程序/client",
+        "vscripts": "程序/middle"
+    },
+    "linkPath": {
+        "dist/content": "content",
+        "dist/game": "game",
+        "美术/地形": "content/maps",
+        "美术/贴图": "content/materials",
+        "美术/模型": "content/models",
+        "美术/特效": "content/particles",
+        "美术/切图": "content/panorama/images/custom_game",
+        "美术/图标": "game/resource/flash3/images",
+        "美术/音频": "content/sound",
+        "程序/音效": "content/soundevents"
+    }
+}

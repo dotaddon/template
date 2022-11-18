@@ -1,5 +1,4 @@
-import React from 'react';
-import { render } from '@demon673/react-panorama';
+import { render } from '@mobilc/panorama-react-dom';
 import { ReactLogo } from './components/react_panorama';
 
 // 默认在中间渲染的红色REACT-PANORAMA标志，从这里开始修改为你自己喜欢的

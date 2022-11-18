@@ -1,0 +1,19 @@
+{
+	"$schema": "node_modules/@mobilc/utils/schema/layout.json",
+	"xml": [
+		{
+			"name": "main", "type": "Hud",
+			"include": [
+				"./hud/index.tsx",
+				"./hud/styles.less",
+				"./async_customdata.js"
+			]
+		},
+		{
+			"name": "custom_loading_screen",
+			"include": [
+				"./loading_screen/index.tsx"
+			]
+		}
+	]
+}
