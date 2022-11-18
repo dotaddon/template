@@ -17,7 +17,6 @@
    // 配置全局模式以排除文件和文件夹。
    "files.exclude": {
       "**/node_modules": true,
-      "*.vscode": true,
       "*.gitignore": true,
       "*.gitattributes": true,
       "*.editorconfig": true,

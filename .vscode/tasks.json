@@ -2,45 +2,38 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "2.0.0",
+    "type": "shell",
     "tasks": [
         {
             "label": "启动游戏",
-            "type": "shell",
             "command": "yarn go"
         },
         {
             "label": "基础链接",
-            "type": "shell",
             "command": "yarn"
         },
         {
             "label": "开发:前端",
-            "type": "shell",
             "command": "yarn dev:client"
         },
         {
             "label": "开发:后端",
-            "type": "shell",
             "command": "yarn dev:server"
         },
         {
             "label": "开发:全部",
-            "type": "shell",
             "command": "yarn dev"
         },
         {
             "label": "编译:前端图片预载",
-            "type": "shell",
             "command": "yarn pro:image"
         },
         {
             "label": "编译:美术资源",
-            "type": "shell",
             "command": "yarn pro:build"
         },
         {
             "label": "更新依赖",
-            "type": "shell",
             "command": "yarn depend"
         }
     ]
