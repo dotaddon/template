@@ -8,8 +8,8 @@
         "vscripts": "程序/middle"
     },
     "linkPath": {
-        "dist/content": "content",
-        "dist/game": "game",
+        "编译/content": "content",
+        "编译/game": "game",
         "美术/地形": "content/maps",
         "美术/贴图": "content/materials",
         "美术/模型": "content/models",

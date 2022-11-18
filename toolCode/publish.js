@@ -60,8 +60,8 @@ function copyDir(src, dist, omit, bEncrypt, callback) {
 (async () => {
     console.log('发布脚本开始复制和加密文件');
     copyDir(
-        'game',
-        'publish',
+        '编译/game',
+        '编译/publish',
         (_path) => {
             // omit the _path
             // console.log('omit?', _path);

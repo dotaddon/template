@@ -142,7 +142,7 @@ function single_excel_filter(file, bNpc, path_from, path_goto) {
     if (!fs.existsSync(declaraPath)) fs.mkdirSync(declaraPath);
     program.option('-w, --watch', 'Watch Mode').parse(process.argv);
     for (const path_root in path_excel) {
-        const path_from = `表格\\${path_root}`;
+        const path_from = `策划\\${path_root}`;
         if (!fs.existsSync(path_from)) continue;
         const path_goto = path_excel[path_root];
         if (!fs.existsSync(path_goto)) fs.mkdirSync(path_goto);
