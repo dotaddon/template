@@ -1,5 +1,5 @@
 {
-    "desc": "这个目录是用于自搭建的存档库",
+    "desc": "这个目录是开发用服务器",
     "extends": "@mobilc/tsconfig/base.json",
     "include": [
         "../server",

@@ -19,6 +19,7 @@
         "build:excels": "node toolCode/xlsx2kv.js",
         "build:kvjson": "node toolCode/kv2json.js",
         "build:images": "tsx .bin/image",
+        "build:console": "tsx watch 程序/server",
         "build:client": "tsx .bin/esbuild.ts NODE_ENV=development",
         "build:server": "tstl --project 程序/middle/tsconfig.json",
         "postBuild": "node toolCode/publish.js",
