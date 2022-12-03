@@ -1,6 +1,6 @@
 {
     "$schema": "node_modules/@mobilc/utils/schema/dota2.json",
-    "FolderName": "dotasouls",
+    "FolderName": "mobilc",
     "DefaultMap": "dota",
     "MaxPlayers": 5,
     "srcPath":{

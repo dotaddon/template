@@ -23,5 +23,9 @@
       "yarn.lock": true,
       "package-lock.json": true,
       "LICENSE": true,
-   }
+   },
+   "cSpell.words": [
+      "mobilc",
+      "vscripts"
+   ]
 }
