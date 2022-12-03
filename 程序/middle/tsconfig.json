@@ -7,6 +7,6 @@
         "../public"
     ],
     "compilerOptions": {
-        "outDir": "../../dist/game/scripts/vscripts"
+        "outDir": "../../编译/game/scripts/vscripts"
     }
 }

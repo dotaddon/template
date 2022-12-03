@@ -1,15 +1,11 @@
 import { build } from 'esbuild'
-import { pack,CreateXml } from '@mobilc/utils';
-import { xml } from '../layout.config.json';
-const { watch,compiler } = pack(xml as any);
+import { pack,CreateLayout, layoutFileType } from '@mobilc/utils';
+import { xml } from '../layout.config.json'; 
+
 const bDev = process.argv.includes('--watch')
-CreateXml(xml as any)
-build({
-    ...watch(),
-    tsconfig:'src/client/tsconfig.json',
-    logLevel:'info',
-    external:['s2r://*'],
-})
+const config = xml as layoutFileType[]
+CreateLayout(config)
+build(pack(config).watch())
     .then(() => console.log('watch...'))
     // .catch(() => process.exit(1))
 

@@ -1,7 +1,15 @@
+# npm包
 node_modules
-编译
-game
-publish
-~$*.xlsx
+
+# lock
 yarn.lock
-*.lua
+pnpm-lock.yaml
+
+# 输出目录
+编译
+dist
+
+# 表格临时文件
+~$*.xlsx
+
+# 其他自定义文件
