@@ -1,4 +1,4 @@
-import { reloadable } from "@mobilc/vlua-tool";
+import { reloadable } from '@mobilc/vlua-tool';
 
 const heroSelectionTime = 10;
 
@@ -6,9 +6,9 @@ const heroSelectionTime = 10;
 export class GameMode {
     constructor() {
         this.configure();
-        ListenToGameEvent("game_rules_state_change", () => this.OnStateChange(), undefined);
-        ListenToGameEvent("npc_spawned", event => this.OnNpcSpawned(event), undefined);
-        CustomGameEventManager.RegisterListener('c2s_test_event',(id,event)=>print('你点击了测试按钮'))
+        ListenToGameEvent('game_rules_state_change', () => this.OnStateChange(), undefined);
+        ListenToGameEvent('npc_spawned', (event) => this.OnNpcSpawned(event), undefined);
+        CustomGameEventManager.RegisterListener('c2s_test_event', (id, event) => print('你点击了测试按钮'));
     }
 
     private configure(): void {
@@ -19,12 +19,10 @@ export class GameMode {
         GameRules.SetHeroSelectionTime(heroSelectionTime);
     }
 
-    public OnStateChange(): void {
-    }
+    public OnStateChange(): void {}
     public Reload() {
-        print("Script reloaded!");
+        print('Script reloaded!');
     }
 
-    private OnNpcSpawned(event: NpcSpawnedEvent) {
-    }
+    private OnNpcSpawned(event: NpcSpawnedEvent) {}
 }
