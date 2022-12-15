@@ -1,5 +1,5 @@
 import { build } from 'esbuild'
-import { pack, CreateLayout, layoutFileType } from '@mobilc/utils';
+import { pack, CreateLayout, layoutFileType } from '@dotaddon/packer';
 import layout from '../layout.config.json';
 
 const xml = layout.xml as layoutFileType[]

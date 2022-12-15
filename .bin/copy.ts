@@ -1,4 +1,4 @@
-import { getAddonPath, getMainMap } from '@mobilc/utils'
+import { getAddonPath, getMainMap } from '@dotaddon/rigger'
 import { copyFile, existsSync, mkdirSync } from 'fs';
 import { dirname, join, resolve } from 'path';
 

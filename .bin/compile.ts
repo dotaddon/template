@@ -1,3 +1,3 @@
-import { compileX } from "@mobilc/utils";
+import { compileX } from "@dotaddon/rigger";
 
 compileX()

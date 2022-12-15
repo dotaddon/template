@@ -1,5 +1,5 @@
 {
-    "$schema": "node_modules/@mobilc/utils/schema/dota2.json",
+    "$schema": "node_modules/@dotaddon/rigger/schema/dota2.json",
     "FolderName": "mobilc",
     "DefaultMap": "dota",
     "MaxPlayers": 5,

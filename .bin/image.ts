@@ -1,3 +1,3 @@
-import { images_compiler } from '@mobilc/utils'
+import { images_compiler } from '@dotaddon/rigger'
 
 images_compiler()
