@@ -1,0 +1,12 @@
+{
+    "desc": "该目录下放置游戏运行逻辑和触发脚本",
+    "extends": "@mobilc/tsconfig/lua.json",
+    "include": [
+        "../vscripts",
+        "../shared",
+    ],
+    "tstl":{
+        "luaTarget": "JIT",
+        "sourceMapTraceback":true,
+    }
+}

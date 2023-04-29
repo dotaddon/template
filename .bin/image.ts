@@ -1,3 +1,4 @@
-import { images_compiler } from '@dotaddon/rigger'
+import { assets } from '@dotaddon/packer'
+import { images } from '../dota2.config.json'
 
-images_compiler()
+assets(images, 'images_precache.xml')

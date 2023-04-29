@@ -1,0 +1,17 @@
+{
+	"$schema": "../../node_modules/@dotaddon/packer/schema/layout.json",
+	"xml": [
+		{
+			"name": "main", "type": "Hud",
+			"include": [
+				"./hud/index.tsx"
+			]
+		},
+		{
+			"name": "custom_loading_screen",
+			"include": [
+				"./loading_screen/index.tsx"
+			]
+		}
+	]
+}

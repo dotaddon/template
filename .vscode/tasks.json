@@ -2,20 +2,65 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "安装",
+            "label": "发布",
+            "type": "npm",
+            "script": "publish",
+            "dependsOn": [
+                "图",
+                "预",
+                "资源构建",
+                "编",
+            ],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "发布(简)",
+            "type": "npm",
+            "script": "publish",
+        },
+        {
+            "label": "资源构建",
+            "detail": "资源构建, 将 `content`下的`地形`,`模型`,`贴图`,`特效`,`声音` 编译到game目录下",
+            "type": "npm",
+            "script": "compile",
+        },
+        {
+            "label": "图",
+            "detail": "图片编译, 将 dota2.config.json.imgages 下配置的图片 加入到 images_precache.xml 中",
             "type": "shell",
-            "command": "npx pnpm i",
+            "command": "tsx .bin/image",
             "presentation": {
                 "close": true
             }
         },
         {
-            "label": "开发并进入",
+            "label": "文",
+            "detail": "本地化编译, 将 `方言`目录下的表格 构建到 本地化文件中",
+            "type": "shell",
+            "command": "tsx .bin/lang"
+        },
+        {
+            "label": "预",
+            "detail": "precache列表更新, 将 lua中涉及到的`模型`,`特效`,`声音` 填写到 vscripts/init 中",
+            "type": "shell",
+            "command": "tsx .bin/prechache"
+        },
+        {
+            "label": "编",
+            "detail": "一次性编译全部代码",
             "type": "npm",
-            "script": "go",
+            "script": "build",
+        },
+        {
+            "label": "入",
+            "detail": "开发并进入",
+            "dependsOn": [
+                "dev",
+                "重启",
+            ],
             "options": {
                 "statusbar": {
-                    "color": "#ff7403"
+                    "color": "#ffbb00"
                 }
             },
             "presentation": {
@@ -29,17 +74,16 @@
             }
         },
         {
+            "label": "dev",
+            "detail": "启动进入开发环境,编译代码等等",
             "type": "npm",
-            "script": "launch",
-            "label": "重启游戏",
-            "presentation": {
-                "close": true
-            }
+            "script": "dev",
         },
         {
-            "label": "图片",
-            "type": "shell",
-            "command": "tsx .bin/image",
+            "label": "重启",
+            "detail": "关闭后重启游戏",
+            "type": "npm",
+            "script": "launch",
             "presentation": {
                 "close": true
             }

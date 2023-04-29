@@ -1,0 +1,4 @@
+packages:
+  - "src/*"
+  - "策划"
+  - ".bin"

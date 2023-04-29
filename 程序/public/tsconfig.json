@@ -1,4 +1,0 @@
-{
-    "desc":"这个目录是用于游戏存档的类型",
-    "extends": "@mobilc/tsconfig/base.json",
-}

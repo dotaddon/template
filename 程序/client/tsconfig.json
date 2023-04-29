@@ -1,8 +1,0 @@
-{
-    "desc": "该目录下放置静态页面与玩家交互逻辑",
-    "extends": "@mobilc/tsconfig/panorama.json",
-    "include": [
-        "../client",
-        "../connect"
-    ]
-}

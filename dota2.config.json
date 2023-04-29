@@ -3,9 +3,12 @@
     "FolderName": "mobilc",
     "DefaultMap": "dota",
     "MaxPlayers": 5,
+	"maps": [
+        "dota"
+    ],
     "srcPath":{
-        "panorama": "程序/client",
-        "vscripts": "程序/middle"
+        "panorama": "程序/panorama",
+        "vscripts": "程序/vscripts"
     },
     "linkPath": {
         "编译/content": "content",
@@ -14,9 +17,28 @@
         "美术/贴图": "content/materials",
         "美术/模型": "content/models",
         "美术/特效": "content/particles",
-        "美术/切图": "content/panorama/images/custom_game",
+        "美术/切图": "content/panorama/images",
         "美术/图标": "game/resource/flash3/images",
         "美术/音频": "content/sound",
-        "程序/音效": "content/soundevents"
-    }
+        "程序/音效": "content/soundevents",
+        "程序/npc": "game/scripts/npc",
+        "方言":"game/localization"
+    },
+    "publish_options": {
+        "excludeFiles": [
+            "**/*.bin",
+            "**/*.py",
+            "**/*.cfg"
+        ],
+        "encryptFiles": [
+            "scripts/vscripts/**/*.lua"
+        ],
+        "encryptDedicatedServerKeyTest": "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "encryptDedicatedServerKeyRelease_Test": "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "encryptDedicatedServerKeyRelease": "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "DotaKeyVersion": "key"
+    },
+    "images": [
+        "custom_game"
+    ]
 }

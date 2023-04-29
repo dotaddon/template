@@ -3,6 +3,6 @@
     "extends": "@mobilc/tsconfig/base.json",
     "include": [
         "../server",
-        "../public"
+        "../shared"
     ]
 }

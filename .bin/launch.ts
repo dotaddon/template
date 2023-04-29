@@ -1,4 +1,6 @@
 // 启动项目
-import { dotaLaunch } from "@dotaddon/rigger";
+import { dotaLaunch,dotaTool } from "@dotaddon/rigger";
 
 dotaLaunch()
+
+dotaTool('vconsole2', undefined)
