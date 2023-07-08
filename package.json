@@ -1,12 +1,14 @@
 {
     "name": "root",
     "author": "西索酱",
-    "version": "2.0.0",
+    "version": "3.1.0",
     "description": "a ts template for dota2 rpg, together with some helper scripts",
     "private": true,
     "repository": "https://gitee.com/kill-seven-at-once/ts-dota-rpg",
     "workspaces": [
-        "src/*"
+        "程序/*",
+        "策划",
+        ".bin"
     ],
     "scripts": {
         "go": "run-p dev launch",
@@ -14,37 +16,43 @@
         "compile": "tsx .bin/compile",
         "suggest": "code --install-extension robincode.dota2-coding-helper --install-extension actboy168.tasks",
         "images": "tsx .bin/image",
-        "lint": "eslint --ext .js,.ts,.tsx --quiet --fix \"./程序\" ",
+        "lint": "eslint --ext .js,.ts,.tsx --quiet --fix \"./程序\"",
         "build": "run-p build:*",
         "build:images": "pnpm images",
-        "build:panorama": "tsx .bin/esbuild",
+        "build:panorama": "tsx .bin/pack",
         "build:vscripts": "tstl -p 程序/vscripts --outDir ../../编译/game/scripts/vscripts",
         "dev": "npm-run-all --parallel \"build:* --watch\" dev:*",
-        "dev:console": "tsx .bin/console",
-        "dev:nettable": "tsx .bin/dev",
+        "dev:nettable": "tsx .bin/nettable",
         "dev:i18n": "tsx .bin/lang",
         "postinstall": "tsx .bin/install",
         "preinstall": "npx only-allow pnpm",
-        "publish": "tsx .bin/publish.ts"
+        "publish": "tsx .bin/publish.ts",
+        "preDeploy": "tsx .bin/cloudbaserc",
+        "deploy": "tcb framework deploy"
+    },
+    "dependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.61.0",
+        "@typescript-eslint/parser": "^5.61.0",
+        "eslint": "^8.23.0",
+        "prettier": "^2.7.1",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "eslint-plugin-react": "^7.31.1",
+        "eslint-plugin-react-hooks": "^4.6.0"
     },
     "devDependencies": {
-            "@cloudbase/node-sdk": "^2.9.1",
-            "@dotaddon/packer": "^0.0.12",
-            "@dotaddon/rigger": "^0.0.10",
-            "@mobilc/dota-axios": "^0.0.2",
-            "@mobilc/tsconfig": "^0.2.2",
-            "@types/node": "^18.14.1",
-            "npm-run-all2": "^6.0.4",
-            "dota-js-kv": "^0.1.6",
-            "typescript": "^4.9.5",
-            "eslint": "^8.23.0",
-            "eslint-config-prettier": "^8.5.0",
-            "eslint-plugin-import": "^2.26.0",
-            "eslint-plugin-prettier": "^4.2.1",
-            "eslint-plugin-react": "^7.31.1",
-            "eslint-plugin-react-hooks": "^4.6.0"
+        "@cloudbase/node-sdk": "^2.9.1",
+        "@mobilc/dota-axios": "^0.0.2",
+        "@mobilc/tsconfig": "^0.2.5",
+        "@types/node": "^18.16",
+        "dota-js-kv": "^0.1.6",
+        "npm-run-all2": "^6.0.4",
+        "tslib": "^2.5.0",
+        "typescript": "^4.9.5",
+        "typescript-to-lua": "1.10.0"
     },
     "volta": {
-        "node": "16.19.0"
+        "node": "18.16.0"
     }
 }

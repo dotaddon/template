@@ -1,5 +1,5 @@
 {
-	"$schema": "../../node_modules/@dotaddon/packer/schema/layout.json",
+	"$schema": "../../.bin/node_modules/@dotaddon/packer/schema/layout.json",
 	"xml": [
 		{
 			"name": "main", "type": "Hud",
@@ -13,5 +13,8 @@
 				"./loading_screen/index.tsx"
 			]
 		}
+	],
+	"image-loader": [
+		"custom_game"
 	]
 }

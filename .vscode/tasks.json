@@ -2,9 +2,15 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "发布",
+            "label": "deploy",
+            "detail": "部署云函数",
             "type": "npm",
-            "script": "publish",
+            "script": "deploy"
+        },
+        {
+            "label": "发布",
+            "type": "shell",
+            "command": "pnpm publish",
             "dependsOn": [
                 "图",
                 "预",
@@ -21,8 +27,8 @@
         {
             "label": "资源构建",
             "detail": "资源构建, 将 `content`下的`地形`,`模型`,`贴图`,`特效`,`声音` 编译到game目录下",
-            "type": "npm",
-            "script": "compile",
+            "type": "shell",
+            "command": "pnpm compile",
         },
         {
             "label": "图",
@@ -48,8 +54,14 @@
         {
             "label": "编",
             "detail": "一次性编译全部代码",
-            "type": "npm",
-            "script": "build",
+            "type": "shell",
+            "command": "pnpm build",
+        },
+        {
+            "label": "理",
+            "detail": "规范整理ts源码",
+            "type": "shell",
+            "command": "pnpm lint",
         },
         {
             "label": "入",
@@ -82,8 +94,8 @@
         {
             "label": "重启",
             "detail": "关闭后重启游戏",
-            "type": "npm",
-            "script": "launch",
+            "type": "shell",
+            "command": "pnpm launch",
             "presentation": {
                 "close": true
             }

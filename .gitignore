@@ -5,6 +5,9 @@ node_modules
 yarn.lock
 pnpm-lock.yaml
 
+# 缓存文件
+.cache
+
 # 输出目录
 编译
 dist

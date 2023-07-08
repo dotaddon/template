@@ -1,4 +1,4 @@
 import { assets } from '@dotaddon/packer'
-import { images } from '../dota2.config.json'
+import layout from '../程序/panorama/layout.config.json';
 
-assets(images, 'images_precache.xml')
+assets(layout['image-loader'], 'images_precache.xml')

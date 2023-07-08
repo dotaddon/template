@@ -9,7 +9,7 @@ export function ReactLogo(): JSX.Element {
         <Panel style={{ flowChildren: 'down', verticalAlign: 'center', horizontalAlign: 'center' }}>
             <Label className='lableStyle' style={{ ...lableStyle, fontSize: '120px' }} text="Hello Dota!" />
             <Label className='lableStyle' style={{ ...lableStyle, fontSize: '30px' }} text="https://github.com/ark120202/react-panorama" />
-            <Label className='lableStyle' style={{ ...lableStyle, fontSize: '30px' }} text="编辑 src/hud/components/react_panorama.tsx 以移除此界面" />
+            <Label className='lableStyle' style={{ ...lableStyle, fontSize: '30px' }} text="编辑 程序/hud/components/react_panorama.tsx 以移除此界面" />
             <Button
                 className="ButtonBevel"
                 onactivate={() => {

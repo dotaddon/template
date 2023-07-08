@@ -1,5 +1,5 @@
 {
-    "$schema": "node_modules/@dotaddon/rigger/schema/dota2.json",
+    "$schema": "./.bin/node_modules/@dotaddon/rigger/schema/dota2.json",
     "FolderName": "mobilc",
     "DefaultMap": "dota",
     "MaxPlayers": 5,
@@ -24,21 +24,13 @@
         "程序/npc": "game/scripts/npc",
         "方言":"game/localization"
     },
-    "publish_options": {
-        "excludeFiles": [
-            "**/*.bin",
-            "**/*.py",
-            "**/*.cfg"
-        ],
-        "encryptFiles": [
-            "scripts/vscripts/**/*.lua"
-        ],
-        "encryptDedicatedServerKeyTest": "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
-        "encryptDedicatedServerKeyRelease_Test": "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
-        "encryptDedicatedServerKeyRelease": "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
-        "DotaKeyVersion": "key"
-    },
-    "images": [
-        "custom_game"
-    ]
+    "publish_options":{
+        "excludeFiles":"",
+        "encryptFiles":"",
+        "encryptDedicatedServerKey":{
+            "key":"",
+            "test":"",
+            "publish":""
+        }
+    }
 }

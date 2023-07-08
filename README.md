@@ -1,10 +1,15 @@
-# `<div align='center' ><font size='70'>`TsDotaRPG 3.0`</font></div>`
+# `<div align='center' ><font size='70'>`TsDotaRPG 3.1`</font></div>`
 
 ## 梗概
 
 * `1.0` dota2 自定义游戏开发模板，全汉化目录结构
-* `2.0` 根据疫情期间的开发经验，在1.3.3的基础上做了大幅度修改
-* `3.0` 看在捐款的份上更新的
+* `2.0` 根据既往的开发经验，在1.3.3的基础上做了大幅度修改
+  * 更简洁的项目结构
+* `3.0` 看在捐款的份上更新的。
+  * 采用前端流行的monorepo结构，对硬盘更友好
+  * 集成了腾讯云开发做游戏后端
+
+* 觉得有用的同志们，多金的赞助一波，多力的点个star，谢谢各位
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![](https://img.shields.io/badge/模版-DOtA2-red.svg?colorA=abcdef)
@@ -21,6 +26,7 @@
 2. 用 `TypeScript`写dota2自定义RPG脚本,实时编译
 3. 将 `方言`文件夹的 `.xlsx`文件输出到 `game/resources`，编译为dota2的语言文件
 4. 批量编译地图、特效、全景图片资源
+5. 自动生成 特效预载入列表
 
 ## 文件夹内容
 
@@ -32,9 +38,9 @@
 | 程序/vscripts | 基于TS来写游戏主程序，触发，技能等等 |
 | 程序/server   | 用来放服务器代码，已给出腾讯云函数示例代码 |
 | 程序/shared   | 用来写 `panorama ts`和 `tstl`公用的声明，如 `custom_net_tables`等 |
-| 程序/npc   | 存放 实体 配置文件 |
-| 程序/音效   | 存放 音效 配置文件 |
-| 方言  | i18n, 表格配置  |
+| 程序/npc      | 存放 实体 配置文件 |
+| 程序/音效     | 存放 音效 配置文件 |
+| 方言          | i18n, 表格配置  |
 | 策划          | 提供给策划人员放置文档、表格的目录 |
 | 美术/地形     | 存放 `Hammer`用的*.vmap文件 |
 | 美术/贴图     | 存放 `MaterialEditor`用的*.vtex文件及相关图片 |
@@ -65,7 +71,7 @@
 ## 使用步骤
 
 1. 安装nodejs
-  * 版本要求是 [node@16.19](https://nodejs.org/zh-cn), 
+  * 版本要求是 [node@16.19](https://nodejs.org/zh-cn), /** @18.16也OK */
   * 推荐直接下载 [volta](https://volta.sh/) 进行node 版本管理
 2. `clone` 或 `fork` [本项目](https://gitee.com/kill-seven-at-once/ts-dota-rpg.git)
 3. 必要配置项目
@@ -76,7 +82,7 @@
 ```bash
 # 包管理工具
 npm i -g pnpm
-# volta 安装方式
+# volta 的安装方式
 volta install pnpm
 # ts执行工具
 pnpm add -g tsx
@@ -133,7 +139,7 @@ pnpm build
   1. 网表配置文件
   `程序\shared\dota_net_table_keys.json` 输出到 `dist\game\scripts\custom_net_tables.txt`
   2. 切图预载入
-  基于 `美术\切图`的相对目录,填写`dota2.config.json`的`images`中 
+  基于 `美术\切图`的相对目录,填写`layout.config.json`的`image-loader`中 
   3. 特效模型预载入
   将lua中包含相关后缀名的字符串准备到`程序\vscripts\init`目录下
 
@@ -141,10 +147,9 @@ pnpm build
   欢迎提 `issues`
   欢迎贡献代码
 
-## QQ群
-  450567454 新生代大神群，突出一个ts开发，敏捷交付。人数少爱闲聊。
-  347735258 古早大神群，突出一个老鸽子基地，群英荟萃。人数太多，建议给群主赞助，不然他老是忘记续费QQ会员。
-
+## QQ频道
+  [Dota2游廊制作群](https://pd.qq.com/s/1wecr898c)
+  [UNCO大世界](https://pd.qq.com/s/dyprfmrpn)
 
 # 鸣谢
 

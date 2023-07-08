@@ -2,8 +2,9 @@ import { pack, CreateLayout, layoutFileType } from '@dotaddon/packer';
 import layout from '../程序/panorama/layout.config.json';
 import { watch } from 'rollup';
 
+const NODE_DEV = process.argv.includes('--watch')
 const xml = layout.xml as layoutFileType[]
-const config = pack(xml).compiler()
+const config = pack(xml, NODE_DEV).compiler()
 
 let watcher = watch(config)
 
@@ -17,7 +18,7 @@ watcher.on('event', event => {
             break;
         case 'END':
             CreateLayout(xml)
-            if (!process.argv.includes('--watch'))
+            if (!NODE_DEV)
                 process.exit(1)
             break;
         case 'BUNDLE_END':

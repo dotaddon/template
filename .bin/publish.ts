@@ -1,12 +1,12 @@
-"use strict";
-
-import { walk } from "walk";
 import { existsSync, mkdirSync, copyFileSync, readFileSync, writeFileSync } from "fs";
+import { getAddonPath, encryptLua, RPGConfig } from '@dotaddon/rigger'
 import anyMatch from 'anymatch';
 import { join } from "path";
-import { publish_options } from "../dota2.config.json";
-import { getAddonPath, encryptLua } from '@dotaddon/rigger'
+import { walk } from "walk";
 const { server } = getAddonPath()
+const publish_options = RPGConfig().publish_options!
+if (!publish_options)
+    process.exit(1);
 
 const walker = walk(server);
 const excludeFiles = publish_options.excludeFiles;
@@ -14,12 +14,10 @@ const encryptFiles = publish_options.encryptFiles;
 let mode = process.argv[2];
 const dedicatedServerKey =
     mode == `release`
-        ? publish_options.encryptDedicatedServerKeyRelease
-        : mode == `release_test`
-        ? publish_options.encryptDedicatedServerKeyRelease_Test
-        : publish_options.encryptDedicatedServerKeyTest;
+        ? publish_options.encryptDedicatedServerKey.publish
+        : publish_options.encryptDedicatedServerKey.test
 
-const dotaVer = publish_options.DotaKeyVersion;
+const dotaVer = publish_options.encryptDedicatedServerKey.key;
 
 const getPublishPath = (source) => source.replace(server, server +"_pub");
 

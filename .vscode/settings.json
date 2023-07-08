@@ -19,12 +19,7 @@
       "**/node_modules": true,
       "yarn.lock": true,
       "package-lock.json": true,
-      "pnpm-lock.yaml": true,
-      "pnpm-workspace.yaml":true,
-      "*.gitignore": true,
-      "*.gitattributes": true,
-      "*.editorconfig": true,
-      ".eslintrc": true,
+      "pnpm-*.yaml": true,
       "LICENSE": true,
       ".*": true,
    }
