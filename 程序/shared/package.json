@@ -1,7 +1,4 @@
 {
     "name": "shared",
-    "private": true,
-    "devDependencies": {
-        "@mobilc/shared-type": "0.0.1"
-    }
+    "private": true
 }

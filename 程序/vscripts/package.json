@@ -2,9 +2,9 @@
     "name": "vscripts",
     "private": true,
     "dependencies": {
-        "@mobilc/vlua-tool": "^0.1.7"
+        "@mobilc/vlua-tool": "^0.2.0"
     },
     "devDependencies": {
-        "@moddota/dota-lua-types": "^4.24.0"
+        "@mobilc/dota-lua-types": "^7.34"
     }
 }
