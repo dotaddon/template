@@ -1,5 +1,5 @@
 {
-	"$schema": "../../.bin/node_modules/@dotaddon/packer/schema/layout.json",
+	"$schema": "../../node_modules/@dotaddon/packer/schema/layout.json",
 	"xml": [
 		{
 			"name": "main", "type": "Hud",

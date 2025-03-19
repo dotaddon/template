@@ -2,7 +2,7 @@ import { PanelAttributes } from '@mobilc/panorama-react-dom';
 import { useState } from 'react';
 import './react_panorama.scss'
 
-let lableStyle: PanelAttributes['Panel']['style'] = { horizontalAlign: 'center', color: 'red',  };
+let lableStyle: PanelAttributes<'Panel'>['style'] = { horizontalAlign: 'center', color: 'red',  };
 export function ReactLogo(): JSX.Element {
     const [click, setClick] = useState<number>(0);
     return (
