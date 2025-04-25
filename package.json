@@ -24,7 +24,7 @@
     },
     "devDependencies": {
         "@cloudbase/node-sdk": "^2.9.1",
-        "@dotaddon/rigger": "^1.0.0",
+        "@dotaddon/rigger": "^1.0.1",
         "@mobilc/dota-types": "^7.38.0",
         "@mobilc/tsconfig": "^0.3.1",
         "@types/node": "^18.16",
@@ -45,7 +45,7 @@
         "tslib": "^2.5.0",
         "typescript": "^5.4.3",
         "typescript-to-lua": "^1.25.1",
-        "vdf-faster": "^2.1.4",
+        "vdf-faster": "^2.1.5",
         "weixin-pay": "^1.1.7"
     },
     "volta": {
